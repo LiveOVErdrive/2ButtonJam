@@ -206,6 +206,22 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 },
     "sourceSize": { "w": 32, "h": 32 },
     "duration": 100
+   },
+   "climber 26.aseprite": {
+    "frame": { "x": 128, "y": 32, "w": 32, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 },
+    "sourceSize": { "w": 32, "h": 32 },
+    "duration": 100
+   },
+   "climber 27.aseprite": {
+    "frame": { "x": 160, "y": 32, "w": 32, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 32 },
+    "sourceSize": { "w": 32, "h": 32 },
+    "duration": 100
    }
  },
  "meta": {
@@ -216,7 +232,9 @@
   "size": { "w": 256, "h": 64 },
   "scale": "1",
   "frameTags": [
-   { "name": "Idle", "from": 0, "to": 25, "direction": "forward" }
+   { "name": "Idle", "from": 0, "to": 25, "direction": "forward" },
+   { "name": "preppingJump", "from": 26, "to": 26, "direction": "forward" },
+   { "name": "Jump", "from": 27, "to": 27, "direction": "forward" }
   ],
   "layers": [
    { "name": "Layer 2", "opacity": 255, "blendMode": "normal" },

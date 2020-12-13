@@ -1,8 +1,8 @@
 /* 
  * Portions copyright 2020, James Kemp.
+ * Portions copyright 2020, Justin Reardon.
 */
 
-import Utilities from "../Utilities";
 import MainMenu from "./MainMenu";
 
 export default class MainSettings extends Phaser.Scene {
@@ -12,7 +12,6 @@ export default class MainSettings extends Phaser.Scene {
   public static Name = "MainSettings";
 
   public create(): void {
-    Utilities.LogSceneMethodEntry("MainSettings", "create");
     const startYPosition = this.cameras.main.height / 4;
     const fontSize = 25;
 

@@ -1,9 +1,9 @@
 /* 
  * Portions copyright 2020, James Kemp.
+ * Portions copyright 2020, Justin Reardon.
 */
 
 import Preloader from "./Preloader";
-import Utilities from "../Utilities";
 
 export default class Boot extends Phaser.Scene {
   /**
@@ -16,8 +16,6 @@ export default class Boot extends Phaser.Scene {
   }
 
   public create(): void {
-    Utilities.LogSceneMethodEntry("Boot", "create");
-
     this.scene.start(Preloader.Name);
   }
 }

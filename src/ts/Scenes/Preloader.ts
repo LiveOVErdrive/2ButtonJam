@@ -1,9 +1,11 @@
 /* 
  * Portions copyright 2020, James Kemp.
+ * Portions copyright 2020, Justin Reardon.
 */
 
 import SplashScreen from "./SplashScreen";
 import Utilities from "../Utilities";
+import MainGame from "./MainGame";
 
 export default class Preloader extends Phaser.Scene {
   /**
@@ -15,19 +17,12 @@ export default class Preloader extends Phaser.Scene {
     this.addProgressBar();
 
     this.load.path = "assets/";
-    this.load.image("phaser_pixel_medium_flat");
-    this.load.image("Phaser-Logo-Small");
 
-    // You should remove this logic; this is only included here to show off the progress bar.
-    for (let i = 0; i < 100; i++) {
-      this.load.image("Phaser-Logo-Small" + i, "Phaser-Logo-Small.png");
-    }
+    this.load.aseprite('climber', 'climber.png', 'climber.json');
   }
 
   public create(): void {
-    Utilities.LogSceneMethodEntry("Preloader", "create");
-
-    this.scene.start(SplashScreen.Name);
+    this.scene.start(MainGame.Name);
   }
 
   public update(): void {
@@ -53,8 +48,7 @@ export default class Preloader extends Phaser.Scene {
       y: height / 2 - 50,
       text: "Loading...",
       style: {
-        font: "20px monospace",
-        fill: outerTextColor
+        font: "20px monospace"
       }
     });
     loadingText.setOrigin(0.5, 0.5);
@@ -64,8 +58,7 @@ export default class Preloader extends Phaser.Scene {
       y: height / 2 - 5,
       text: "0%",
       style: {
-        font: "18px monospace",
-        fill: "#ffffff"
+        font: "18px monospace"
       }
     });
     percentText.setOrigin(0.5, 0.5);
@@ -75,8 +68,7 @@ export default class Preloader extends Phaser.Scene {
       y: height / 2 + 50,
       text: "",
       style: {
-        font: "18px monospace",
-        fill: outerTextColor
+        font: "18px monospace"
       }
     });
 

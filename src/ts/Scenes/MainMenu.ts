@@ -1,5 +1,6 @@
 /* 
  * Portions copyright 2020, James Kemp.
+ * Portions copyright 2020, Justin Reardon.
 */
 
 import Utilities from "../Utilities";
@@ -17,7 +18,6 @@ export default class MainMenu extends Phaser.Scene {
   }
 
   public create(): void {
-    Utilities.LogSceneMethodEntry("MainMenu", "create");
     const textYPosition = this.cameras.main.height / 3;
 
     const newGameText = this.add.text(this.cameras.main.centerX, textYPosition, "Start");

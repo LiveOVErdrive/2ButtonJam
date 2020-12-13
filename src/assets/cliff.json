@@ -109,7 +109,7 @@
   "version": "1.2.25-x64",
   "image": "cliff.png",
   "format": "RGBA8888",
-  "size": { "w": 76, "h": 76 },
+  "size": { "w": 77, "h": 77 },
   "scale": "1",
   "frameTags": [
    { "name": "center", "from": 0, "to": 0, "direction": "forward" },

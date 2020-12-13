@@ -34,6 +34,10 @@ export default class MainGame extends Phaser.Scene {
     cliffsLayer.setCollisionByProperty({ collides: true });
     this.matter.world.convertTilemapLayer(cliffsLayer);
 
+    // Should be replaced with per tile handling that inspects the tile properties for what values to use.
+    cliffsLayer.getTilesWithin().forEach(x =>
+      (<Phaser.Physics.Matter.TileBody>(<any>x.physics).matterBody)?.setFriction(0.001));
+
     const camera = this.cameras.main;
     camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 

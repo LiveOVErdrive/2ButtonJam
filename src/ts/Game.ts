@@ -12,98 +12,101 @@ import MainGame from "./Scenes/MainGame";
 import MainSettings from "./Scenes/MainSettings";
 import PhaserMatterCollisionPlugin from "phaser-matter-collision-plugin";
 
+const gameWidth = 800;
+const gameHeight = 800;
 
-const gameConfig: Phaser.Types.Core.GameConfig = {
-  width: 800,
-  height: 600,
-  type: Phaser.AUTO,
-  parent: "content",
-  title: "Starter Project for Phaser 3 with Visual Studio Code, TypeScript, and NodeJS",
-  render: {
-    pixelArt: true
-  },
-  physics: {
-    default: "matter",
-    // matter: {
-    //   enableSleeping: true,
-    //   debug: {
+function gameConfig(debug: boolean): Phaser.Types.Core.GameConfig {
+  return {
+    width: 800,
+    height: 600,
+    type: Phaser.AUTO,
+    parent: "content",
+    title: "Starter Project for Phaser 3 with Visual Studio Code, TypeScript, and NodeJS",
+    render: {
+      pixelArt: true
+    },
+    physics: {
+      default: "matter",
+      matter: {
+        enableSleeping: false,
+        debug: debug ? {
+          showAxes: false,
+          showAngleIndicator: true,
+          angleColor: 0xe81153,
 
-    //     showAxes: false,
-    //     showAngleIndicator: true,
-    //     angleColor: 0xe81153,
+          showBroadphase: false,
+          broadphaseColor: 0xffb400,
 
-    //     showBroadphase: false,
-    //     broadphaseColor: 0xffb400,
+          showBounds: false,
+          boundsColor: 0xffffff,
 
-    //     showBounds: false,
-    //     boundsColor: 0xffffff,
+          showVelocity: true,
+          velocityColor: 0x00aeef,
 
-    //     showVelocity: true,
-    //     velocityColor: 0x00aeef,
+          showCollisions: true,
+          collisionColor: 0xf5950c,
 
-    //     showCollisions: true,
-    //     collisionColor: 0xf5950c,
+          showSeparation: false,
+          separationColor: 0xffa500,
 
-    //     showSeparation: false,
-    //     separationColor: 0xffa500,
+          showBody: true,
+          showStaticBody: true,
+          showInternalEdges: true,
 
-    //     showBody: true,
-    //     showStaticBody: true,
-    //     showInternalEdges: true,
+          renderFill: false,
+          renderLine: true,
 
-    //     renderFill: false,
-    //     renderLine: true,
+          fillColor: 0x106909,
+          fillOpacity: 1,
+          lineColor: 0x28de19,
+          lineOpacity: 1,
+          lineThickness: 1,
 
-    //     fillColor: 0x106909,
-    //     fillOpacity: 1,
-    //     lineColor: 0x28de19,
-    //     lineOpacity: 1,
-    //     lineThickness: 1,
+          staticFillColor: 0x0d177b,
+          staticLineColor: 0x1327e4,
 
-    //     staticFillColor: 0x0d177b,
-    //     staticLineColor: 0x1327e4,
+          showSleeping: true,
+          staticBodySleepOpacity: 1,
+          sleepFillColor: 0x464646,
+          sleepLineColor: 0x999a99,
 
-    //     showSleeping: true,
-    //     staticBodySleepOpacity: 1,
-    //     sleepFillColor: 0x464646,
-    //     sleepLineColor: 0x999a99,
+          showSensors: true,
+          sensorFillColor: 0x0d177b,
+          sensorLineColor: 0x1327e4,
 
-    //     showSensors: true,
-    //     sensorFillColor: 0x0d177b,
-    //     sensorLineColor: 0x1327e4,
+          showPositions: true,
+          positionSize: 4,
+          positionColor: 0xe042da,
 
-    //     showPositions: true,
-    //     positionSize: 4,
-    //     positionColor: 0xe042da,
+          showJoint: true,
+          jointColor: 0xe0e042,
+          jointLineOpacity: 1,
+          jointLineThickness: 2,
 
-    //     showJoint: true,
-    //     jointColor: 0xe0e042,
-    //     jointLineOpacity: 1,
-    //     jointLineThickness: 2,
+          pinSize: 4,
+          pinColor: 0x42e0e0,
 
-    //     pinSize: 4,
-    //     pinColor: 0x42e0e0,
+          springColor: 0xe042e0,
 
-    //     springColor: 0xe042e0,
+          anchorColor: 0xefefef,
+          anchorSize: 4,
 
-    //     anchorColor: 0xefefef,
-    //     anchorSize: 4,
-
-    //     showConvexHulls: false,
-    //     hullColor: 0xd703d0
-    //   }
-    // }
-  },
-  plugins: {
-    scene: [
-      {
-        plugin: PhaserMatterCollisionPlugin, // The plugin class
-        key: "matterCollision", // Where to store in Scene.Systems, e.g. scene.sys.matterCollision
-        mapping: "matterCollision" // Where to store in the Scene, e.g. scene.matterCollision
+          showConvexHulls: false,
+          hullColor: 0xd703d0
+        } : undefined
       }
-    ]
-  }
-};
+    },
+    plugins: {
+      scene: [
+        {
+          plugin: PhaserMatterCollisionPlugin, // The plugin class
+          key: "matterCollision", // Where to store in Scene.Systems, e.g. scene.sys.matterCollision
+          mapping: "matterCollision" // Where to store in the Scene, e.g. scene.matterCollision
+        }
+      ]
+    }
+  };
+}
 
 export default class Game extends Phaser.Game {
   constructor(config: Phaser.Types.Core.GameConfig) {
@@ -133,7 +136,7 @@ function resize(): void {
   const width = window.innerWidth;
   const height = window.innerHeight;
   const wratio = width / height;
-  const ratio = Number(gameConfig.width) / Number(gameConfig.height);
+  const ratio = Number(gameWidth) / Number(gameHeight);
   if (wratio < ratio) {
     canvas.style.width = width + "px";
     canvas.style.height = (width / ratio) + "px";
@@ -145,8 +148,8 @@ function resize(): void {
 
 window.onload = (): void => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const game = new Game(gameConfig);
+  const game = new Game(gameConfig(false));
   // Uncomment the following two lines if you want the game to scale to fill the entire page, but keep the game ratio.
   // resize();
-  window.addEventListener("resize", resize, true);
+  window.addEventListener("resize", () => resize, true);
 };

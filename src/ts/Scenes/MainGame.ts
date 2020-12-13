@@ -13,6 +13,10 @@ export default class MainGame extends Phaser.Scene {
   public static Name = "MainGame";
   animations: Phaser.Animations.Animation[];
   climber: Climber;
+  keyA: Phaser.Input.Keyboard.Key;
+  keyB: Phaser.Input.Keyboard.Key;
+  keyPressedA: boolean;
+  keyPressedB: boolean;
 
   public preload(): void {
     // Preload as needed.
@@ -26,22 +30,49 @@ export default class MainGame extends Phaser.Scene {
     this.addWall(100, 500);
     this.addWall(300, 400);
     this.addWall(100, 300);
-    this.addWall(300, 200);
+    this.addWall(300, 200, 300);
     this.matter.add.gameObject(floor, { isStatic: true });
 
-    this.climber = new Climber(this.matter.world, 108, 500);
+    this.climber = new Climber(this.matter.world, 108, 510);
     this.climber.setFacing("right");
 
+
+    // Setup event listeners
+    this.keyA = this.input.keyboard.addKey("SPACE");
+    this.keyA.on("up", () => this.keyPressedA = true, this);
+    this.keyB = this.input.keyboard.addKey("SHIFT");
+    this.keyB.on("up", () => this.keyPressedA = true, this);
   }
 
   public update() {
-    this.climber.update();
+    this.climber.update(
+      this.keyPressedA ? "pressed" : undefined,
+      this.keyPressedB ? "pressed" : undefined
+    );
+
+    this.keyPressedA = false;
+    this.keyPressedB = false;
   }
 
-  private addWall(x: number, y: number) {
-    this.matter.add.gameObject(this.add.rectangle(x, y, 5, 50, 0xffff00), {
+  public destroy() {
+    this.climber.destroy();
+  }
+
+  private addWall(x: number, y: number, length = 50) {
+    const rect = this.add.rectangle(x, y, 5, length, 0xffff00);
+    this.matter.add.gameObject(rect, {
       isStatic: true,
-      friction: 1
+      friction: 1,
+      frictionStatic: 700
     });
+    return rect;
+  }
+
+  pressingA(): boolean {
+    return this.input.keyboard.checkDown(this.keyA);
+  }
+
+  pressingB(): boolean {
+    return this.input.keyboard.checkDown(this.keyB);
   }
 }

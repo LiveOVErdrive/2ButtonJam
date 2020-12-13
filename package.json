@@ -14,7 +14,8 @@
   },
   "homepage": "https://github.com/JamesSkemp/phaser-3-vsc-typescript-nodejs",
   "dependencies": {
-    "phaser": "^3.24.1"
+    "phaser": "^3.50.0-beta.12",
+    "phaser-matter-collision-plugin": "^0.10.2"
   },
   "scripts": {
     "build": "webpack --mode production && zip -r -X 2ButtonJam.zip public",

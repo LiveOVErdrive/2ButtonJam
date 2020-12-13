@@ -5,8 +5,13 @@ Portions of this software are copyright 2020 Justin Reardon.
 Portions of this software are copyright 2020 James Skemp, and licensed 
 under the MIT license. See the file MIT_LICENSE.
 
+This software uses the Phaser Matter Collision plugin, Copyright
+2018 Michael Hadley,  which is licensed under the MIT license. See the
+file MIT_LICENSE.
+
 This software uses the Phaser 3 library, Copyright 2020 Richard Davey, 
-Photon Storm Ltd which is licensed under the MIT license. See the file MIT_LICENSE.
+Photon Storm Ltd which is licensed under the MIT license. See the file
+MIT_LICENSE.
 
 # Assets
 

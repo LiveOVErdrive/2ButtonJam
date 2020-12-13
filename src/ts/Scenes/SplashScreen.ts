@@ -1,8 +1,8 @@
 /* 
  * Portions copyright 2020, James Kemp.
+ * Portions copyright 2020, Justin Reardon.
 */
 
-import Utilities from "../Utilities";
 import MainMenu from "./MainMenu";
 
 export default class SplashScreen extends Phaser.Scene {
@@ -16,8 +16,6 @@ export default class SplashScreen extends Phaser.Scene {
   }
 
   public create(): void {
-    Utilities.LogSceneMethodEntry("SplashScreen", "create");
-
     const titleText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY * 0.5, "Starter Project for Phaser 3 with TypeScript")
       .setOrigin(0.5, 0)
       .setFontFamily("monospace").setFontSize(26).setFill("#fff");
@@ -27,7 +25,6 @@ export default class SplashScreen extends Phaser.Scene {
     poweredByText.setFontFamily("monospace").setFontSize(20).setFill("#fff");
     this.add.image(this.cameras.main.centerX, this.cameras.main.centerY, "phaser_pixel_medium_flat");
 
-    this.input.setDefaultCursor("pointer");
     this.input.on("pointerdown", this.loadMainMenu, this);
 
     this.time.addEvent({

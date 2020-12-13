@@ -1,3 +1,4 @@
+import { BodyType } from "matter";
 import Utilities from "../Utilities";
 
 type Facing = "left" | "right";
@@ -10,13 +11,15 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
   state: State;
   sensors: { bottom: MatterJS.BodyType; left: MatterJS.BodyType; right: MatterJS.BodyType; };
   isTouching: { left: boolean; right: boolean; ground: boolean; };
+  hangingConstraint: MatterJS.ConstraintType | undefined;
+  touchingAt: Phaser.Types.Math.Vector2Like | undefined;
 
   constructor(world: Phaser.Physics.Matter.World, x: number, y: number) {
     const w = 32;
     const h = 32;
     const mainBody = world.scene.matter.bodies.rectangle(w / 2, h / 2, 24, 30, {
       chamfer: { radius: 10 },
-      friction: 1
+      friction: 0.001
     });
     const sensors = {
       bottom: world.scene.matter.bodies.rectangle(w / 2, h - 1, w * 0.25, 2, { isSensor: true }),
@@ -48,6 +51,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     this.isTouching = { left: false, right: false, ground: false };
     world.scene.matter.world.on("beforeupdate", this.resetTouching, this);
 
+    this.touchingAt = new Phaser.Math.Vector2(x, y);
     // Setup initial state
     this.enterStateClinging();
   }
@@ -86,21 +90,18 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
   private enterStateClinging() {
     this.state = "clinging";
     this.play({ key: 'Idle', repeat: -1, repeatDelay: 2000 });
-    this.setIgnoreGravity(true);
-    this.setVelocityY(1.5);
-    this.setVelocityX(0);
+    this.replaceHangingConstraint(this.touchingAt);
   }
 
   private enterStatePrepping(): void {
     this.state = "prepping";
     this.play('preppingJump');
-    this.setIgnoreGravity(true);
   }
 
   enterStateJumping() {
     this.state = "jumping";
     this.play('Jump');
-    this.setIgnoreGravity(false);
+    this.replaceHangingConstraint();
 
     const direction = this.facing === "left" ? -1 : 1;
     this.applyForce(new Phaser.Math.Vector2(direction * 0.02, -0.02));
@@ -109,7 +110,17 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
   enterStateFalling() {
     this.state = "jumping";
     this.play('Jump');
-    this.setIgnoreGravity(false);
+    this.replaceHangingConstraint();
+  }
+
+  private replaceHangingConstraint(position?: Phaser.Types.Math.Vector2Like) {
+    if (this.hangingConstraint) {
+      this.scene.matter.world.removeConstraint(this.hangingConstraint);
+    }
+
+    this.hangingConstraint = position ?
+      this.scene.matter.add.worldConstraint(<BodyType>this.body, 14, 0.9, { pointA: position }) :
+      undefined;
   }
 
   setFacing(facing: Facing) {
@@ -135,15 +146,21 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
   onSensorCollide({ bodyA, bodyB, pair }: { bodyA: MatterJS.BodyType, bodyB: MatterJS.BodyType, pair: MatterJS.ICollisionPair }) {
     // Watch for the player colliding with walls/objects on either side and the ground below, so
     // that we can use that logic inside of update to move the player.
+    let touchPoint: any | undefined = undefined;
     if (bodyB.isSensor) return; // We only care about collisions with physical objects
     if (bodyA === this.sensors.left) {
       this.isTouching.left = true;
-      if (pair.separation < 2) this.x -= 0.5;
+      touchPoint = pair.activeContacts.length > 0 ? pair.activeContacts[0] : undefined;
     } else if (bodyA === this.sensors.right) {
       this.isTouching.right = true;
-      if (pair.separation < 2) this.x += 0.5;
+      touchPoint = pair.activeContacts.length > 0 ? pair.activeContacts[0] : undefined;
     } else if (bodyA === this.sensors.bottom) {
       this.isTouching.ground = true;
+    }
+
+    if (touchPoint) {
+      // Phaser seems to have the wrong type definition for these. Need to access vertex.
+      this.touchingAt = new Phaser.Math.Vector2(touchPoint.vertex.x, touchPoint.vertex.y);
     }
   }
 

@@ -254,6 +254,134 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
     "sourceSize": { "w": 32, "h": 40 },
     "duration": 100
+   },
+   "32": {
+    "frame": { "x": 106, "y": 130, "w": 34, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 100
+   },
+   "33": {
+    "frame": { "x": 106, "y": 130, "w": 34, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 100
+   },
+   "34": {
+    "frame": { "x": 141, "y": 130, "w": 34, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 100
+   },
+   "35": {
+    "frame": { "x": 1, "y": 173, "w": 34, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 100
+   },
+   "36": {
+    "frame": { "x": 1, "y": 173, "w": 34, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 100
+   },
+   "37": {
+    "frame": { "x": 36, "y": 173, "w": 34, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 100
+   },
+   "38": {
+    "frame": { "x": 36, "y": 173, "w": 34, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 100
+   },
+   "39": {
+    "frame": { "x": 36, "y": 173, "w": 34, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 100
+   },
+   "40": {
+    "frame": { "x": 1, "y": 173, "w": 34, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 100
+   },
+   "41": {
+    "frame": { "x": 1, "y": 173, "w": 34, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 100
+   },
+   "42": {
+    "frame": { "x": 141, "y": 130, "w": 34, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 100
+   },
+   "43": {
+    "frame": { "x": 106, "y": 130, "w": 34, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 100
+   },
+   "44": {
+    "frame": { "x": 106, "y": 130, "w": 34, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 100
+   },
+   "45": {
+    "frame": { "x": 71, "y": 173, "w": 34, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 100
+   },
+   "46": {
+    "frame": { "x": 71, "y": 173, "w": 34, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 100
+   },
+   "47": {
+    "frame": { "x": 71, "y": 173, "w": 34, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 100
    }
  },
  "meta": {
@@ -261,13 +389,14 @@
   "version": "1.2.25-x64",
   "image": "climber.png",
   "format": "I8",
-  "size": { "w": 176, "h": 173 },
+  "size": { "w": 176, "h": 216 },
   "scale": "1",
   "frameTags": [
    { "name": "Idle", "from": 0, "to": 25, "direction": "forward" },
    { "name": "preppingJump", "from": 26, "to": 26, "direction": "forward" },
    { "name": "Jump", "from": 27, "to": 27, "direction": "forward" },
-   { "name": "climb", "from": 28, "to": 31, "direction": "forward" }
+   { "name": "climb", "from": 28, "to": 31, "direction": "forward" },
+   { "name": "hang", "from": 32, "to": 47, "direction": "forward" }
   ],
   "layers": [
    { "name": "Layer 2", "opacity": 255, "blendMode": "normal" },

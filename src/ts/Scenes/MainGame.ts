@@ -24,18 +24,23 @@ export default class MainGame extends Phaser.Scene {
   }
 
   public create(): void {
-    this.matter.world.setBounds(0, 0, this.cameras.main.width, this.cameras.main.height);
 
-    const floor = this.add.rectangle(this.cameras.main.width / 2, this.cameras.main.height - 5, this.cameras.main.width, 5, 0xffff00);
-    this.addWall(100, 500);
-    this.addWall(300, 400);
-    this.addWall(100, 300);
-    this.addWall(300, 200, 300);
-    this.matter.add.gameObject(floor, { isStatic: true });
+    const map = this.make.tilemap({ key: "level1" });
 
-    this.climber = new Climber(this.matter.world, 108, 510);
+    const tileset = map.addTilesetImage("cliffs", "cliffs");
+
+    const backgroundLayer = map.createLayer("background", tileset, 0, 0).setAlpha(0.7);
+    const cliffsLayer = map.createLayer("cliffs", tileset, 0, 0);
+    cliffsLayer.setCollisionByProperty({ collides: true });
+    this.matter.world.convertTilemapLayer(cliffsLayer);
+
+    const camera = this.cameras.main;
+    camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+
+    const { x, y } = map.findObject("objects", obj => obj.name === "start");
+    this.climber = new Climber(this.matter.world, x!, y!);
     this.climber.setFacing("right");
-
+    camera.startFollow(this.climber, true);
 
     // Setup event listeners
     this.keyA = this.input.keyboard.addKey("SPACE");
@@ -56,16 +61,6 @@ export default class MainGame extends Phaser.Scene {
 
   public destroy() {
     this.climber.destroy();
-  }
-
-  private addWall(x: number, y: number, length = 50) {
-    const rect = this.add.rectangle(x, y, 5, length, 0xffff00);
-    this.matter.add.gameObject(rect, {
-      isStatic: true,
-      friction: 1,
-      frictionStatic: 700
-    });
-    return rect;
   }
 
   pressingA(): boolean {

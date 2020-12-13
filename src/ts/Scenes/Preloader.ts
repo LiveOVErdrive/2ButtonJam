@@ -19,6 +19,10 @@ export default class Preloader extends Phaser.Scene {
     this.load.path = "assets/";
 
     this.load.aseprite('climber', 'climber.png', 'climber.json');
+
+
+    this.load.image("cliffs", "cliff.png");
+    this.load.tilemapTiledJSON("level1", "maps/level1.json");
   }
 
   public create(): void {

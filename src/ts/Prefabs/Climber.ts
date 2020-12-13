@@ -87,6 +87,8 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     this.state = "clinging";
     this.play({ key: 'Idle', repeat: -1, repeatDelay: 2000 });
     this.setIgnoreGravity(true);
+    this.setVelocityY(1.5);
+    this.setVelocityX(0);
   }
 
   private enterStatePrepping(): void {
@@ -136,10 +138,10 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     if (bodyB.isSensor) return; // We only care about collisions with physical objects
     if (bodyA === this.sensors.left) {
       this.isTouching.left = true;
-      if (pair.separation < 2) this.x -= 1;
+      if (pair.separation < 2) this.x -= 0.5;
     } else if (bodyA === this.sensors.right) {
       this.isTouching.right = true;
-      if (pair.separation < 2) this.x += 1;
+      if (pair.separation < 2) this.x += 0.5;
     } else if (bodyA === this.sensors.bottom) {
       this.isTouching.ground = true;
     }

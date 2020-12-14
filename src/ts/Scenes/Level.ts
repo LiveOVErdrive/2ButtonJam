@@ -5,12 +5,15 @@
 
 import Climber from "../Prefabs/Climber";
 
+export class LevelConfig {
+  constructor(public key: string) { }
+}
 
-export default class MainGame extends Phaser.Scene {
+export default class Level extends Phaser.Scene {
   /**
    * Unique name of the scene.
    */
-  public static Name = "MainGame";
+  public static Name = "Level";
   animations: Phaser.Animations.Animation[];
   climber: Climber;
   keyA: Phaser.Input.Keyboard.Key;
@@ -23,13 +26,13 @@ export default class MainGame extends Phaser.Scene {
     this.animations = this.anims.createFromAseprite('climber');
   }
 
-  public create(): void {
-    const map = this.make.tilemap({ key: "level1" });
+  public create(levelConfig: LevelConfig): void {
+    const map = this.make.tilemap({ key: levelConfig.key });
 
-    const tileset = map.addTilesetImage("cliffs", "cliffs");
+    const cliffTiles = map.addTilesetImage("cliffs", "cliffs");
 
-    const backgroundLayer = map.createLayer("background", tileset, 0, 0).setAlpha(0.7);
-    const cliffsLayer = map.createLayer("cliffs", tileset, 0, 0);
+    const backgroundLayer = map.createLayer("background", cliffTiles, 0, 0).setAlpha(0.7);
+    const cliffsLayer = map.createLayer("cliffs", cliffTiles, 0, 0);
     cliffsLayer.setCollisionByProperty({ collides: true });
     this.matter.world.convertTiles(cliffsLayer.getTilesWithin().filter(x => x.collides), {
       friction: 0.001

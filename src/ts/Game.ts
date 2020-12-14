@@ -8,7 +8,7 @@ import Boot from "./Scenes/Boot";
 import Preloader from "./Scenes/Preloader";
 import MainMenu from "./Scenes/MainMenu";
 import SplashScreen from "./Scenes/SplashScreen";
-import MainGame from "./Scenes/MainGame";
+import Level from "./Scenes/Level";
 import MainSettings from "./Scenes/MainSettings";
 import PhaserMatterCollisionPlugin from "phaser-matter-collision-plugin";
 
@@ -117,7 +117,7 @@ export default class Game extends Phaser.Game {
     this.scene.add(Preloader.Name, Preloader);
     this.scene.add(SplashScreen.Name, SplashScreen);
     this.scene.add(MainMenu.Name, MainMenu);
-    this.scene.add(MainGame.Name, MainGame);
+    this.scene.add(Level.Name, Level);
     this.scene.add(MainSettings.Name, MainSettings);
     this.scene.start(Boot.Name);
   }
@@ -148,7 +148,7 @@ function resize(): void {
 
 window.onload = (): void => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const game = new Game(gameConfig(false));
+  const game = new Game(gameConfig(true));
   // Uncomment the following two lines if you want the game to scale to fill the entire page, but keep the game ratio.
   // resize();
   window.addEventListener("resize", () => resize, true);

@@ -16,13 +16,13 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
 
   constructor(world: Phaser.Physics.Matter.World, x: number, y: number) {
     const w = 32;
-    const h = 32;
+    const h = 40;
     const mainBody = world.scene.matter.bodies.rectangle(w / 2, h / 2, 24, 30, {
       chamfer: { radius: 10 },
       friction: 0.001
     });
     const sensors = {
-      bottom: world.scene.matter.bodies.rectangle(w / 2, h - 1, w * 0.25, 2, { isSensor: true }),
+      bottom: world.scene.matter.bodies.rectangle(w / 2, h - 5, w * 0.25, 2, { isSensor: true }),
       left: world.scene.matter.bodies.rectangle(4, h / 2 - 8, 4, h * 0.25, { isSensor: true }),
       right: world.scene.matter.bodies.rectangle(28, h / 2 - 8, 4, h * 0.25, { isSensor: true })
     };
@@ -33,6 +33,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
 
     world.scene.add.existing(this);
     this.setFixedRotation();
+    this.displayOriginY = 22;
     this.setPosition(x, y);
 
     this.sensors = sensors;

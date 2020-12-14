@@ -66,7 +66,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
 
     switch (this.state) {
       case "clinging":
-        if (keyA === "pressed") {
+        if (keyA === "holding") {
           this.enterStatePrepping();
         } else if (keyB === "holding" && this.touchingAt) {
           this.enterStateClimbing(this.touchingAt);
@@ -77,7 +77,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
       case "prepping":
         if (keyB === "pressed") {
           this.enterStateClinging(true)
-        } else if (keyA === "pressed") {
+        } else if (keyA !== "holding") {
           this.enterStateJumping();
         } else if (!this.isTouching.left && !this.isTouching.right) {
           this.enterStateFalling();
@@ -155,21 +155,30 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     this.replaceHangingConstraint();
   }
 
-  private replaceHangingConstraint(position?: Phaser.Math.Vector2, elasticity = 0.9) {
-    if (position && this.scene.matter.intersectPoint(position.x, position.y).length === 0) {
-      position = undefined;
-    }
+  private replaceHangingConstraint(position?: Phaser.Math.Vector2, elasticity = 1) {
+
 
     if (this.hangingConstraint) {
       this.scene.matter.world.removeConstraint(this.hangingConstraint);
     }
 
-    this.hangingConstraint = position ?
-      this.scene.matter.add.worldConstraint(<BodyType>this.body, 14, elasticity, {
-        pointA: new Phaser.Math.Vector2(Math.round(position.x), Math.round(position.y)),
-        damping: 1
-      }) :
-      undefined;
+    if (position) {
+      const intersections = this.scene.matter.intersectPoint(position.x, position.y);
+      if (intersections.length === 0) {
+        position = undefined;
+      }
+
+      this.hangingConstraint = position ?
+        this.scene.matter.add.worldConstraint(<BodyType>this.body, 12, elasticity, {
+          pointA: new Phaser.Math.Vector2(Math.round(position.x), Math.round(position.y)),
+          damping: 1
+        }) :
+        undefined;
+    } else {
+      this.hangingConstraint = undefined;
+    }
+
+
   }
 
   setFacing(facing: Facing) {
@@ -196,20 +205,37 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     // Watch for the player colliding with walls/objects on either side and the ground below, so
     // that we can use that logic inside of update to move the player.
     let touchPoint: any | undefined = undefined;
+    let facing: Facing | undefined;
     if (bodyB.isSensor) return; // We only care about collisions with physical objects
     if (bodyA === this.sensors.left) {
       this.isTouching.left = true;
-      touchPoint = pair.activeContacts.length > 0 ? pair.activeContacts[0] : undefined;
+      facing = "right";
     } else if (bodyA === this.sensors.right) {
       this.isTouching.right = true;
-      touchPoint = pair.activeContacts.length > 0 ? pair.activeContacts[0] : undefined;
+      facing = "left";
     } else if (bodyA === this.sensors.bottom) {
       this.isTouching.ground = true;
+    }
+
+    if (facing) {
+      // Find the highest contact point.
+      touchPoint = pair.activeContacts.reduce((max: MatterJS.Vector | undefined, x) => !max ? x : (x.y < max.y ? x : max), undefined);
     }
 
     if (touchPoint) {
       // Phaser seems to have the wrong type definition for these. Need to access vertex.
       this.touchingAt = new Phaser.Math.Vector2(touchPoint.vertex.x, touchPoint.vertex.y);
+      if (facing) {
+        if (this.touchingAt.x > bodyB.bounds.min.x && this.touchingAt.x < bodyB.bounds.max.x) {
+          const midPoint = bodyB.bounds.min.x / 2 + bodyB.bounds.max.x / 2;
+          if (this.touchingAt.x < midPoint) {
+            this.touchingAt.x = bodyB.bounds.min.x;
+          } else {
+            this.touchingAt.x = bodyB.bounds.max.x;
+
+          }
+        }
+      }
     }
   }
 

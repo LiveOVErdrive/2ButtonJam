@@ -24,7 +24,6 @@ export default class MainGame extends Phaser.Scene {
   }
 
   public create(): void {
-
     const map = this.make.tilemap({ key: "level1" });
 
     const tileset = map.addTilesetImage("cliffs", "cliffs");
@@ -32,12 +31,8 @@ export default class MainGame extends Phaser.Scene {
     const backgroundLayer = map.createLayer("background", tileset, 0, 0).setAlpha(0.7);
     const cliffsLayer = map.createLayer("cliffs", tileset, 0, 0);
     cliffsLayer.setCollisionByProperty({ collides: true });
-    this.matter.world.convertTilemapLayer(cliffsLayer);
-
-    // Should be replaced with per tile handling that inspects the tile properties for what values to use.
-    cliffsLayer.getTilesWithin().forEach(x => {
-      const body = (<Phaser.Physics.Matter.TileBody>(<any>x.physics).matterBody);
-      body?.setFriction(0.001);
+    this.matter.world.convertTiles(cliffsLayer.getTilesWithin().filter(x => x.collides), {
+      friction: 0.001
     });
 
     const camera = this.cameras.main;

@@ -102,10 +102,11 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
   private enterStateClimbing(position: Phaser.Math.Vector2) {
     const climbFrom = new Phaser.Math.Vector2(position.x, position.y - 24);
 
+
     this.state = "climbing";
     this.play("climb").playAfterRepeat("Idle");
     this.scene.time.delayedCall(
-      200,
+      100,
       () => {
         if (this.state !== "climbing") {
           return;
@@ -116,10 +117,20 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
           this.enterStateClinging(false);
           return;
         }
-
         this.replaceHangingConstraint(climbFrom, 0.1);
 
-        this.scene.time.delayedCall(100, () => this.enterStateClinging(false));
+        const direction = this.facing === "left" ? -1 : 1;
+        this.applyForce(new Phaser.Math.Vector2(direction * 0.0, -0.03));
+
+        this.scene.time.delayedCall(
+          200,
+          () => {
+            if (this.state !== "climbing") {
+              return;
+            }
+            this.enterStateClinging(true);
+          }
+        )
       }
     )
   }

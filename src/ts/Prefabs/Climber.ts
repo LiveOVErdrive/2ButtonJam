@@ -2,7 +2,7 @@ import { BodyType } from "matter";
 import Utilities from "../Utilities";
 
 type Facing = "left" | "right";
-type State = "clinging" | "prepping" | "jumping";
+type State = "clinging" | "prepping" | "jumping" | "climbing";
 type KeyState = "pressed" | "holding" | undefined;
 
 export default class Climber extends Phaser.Physics.Matter.Sprite {
@@ -12,14 +12,14 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
   sensors: { bottom: MatterJS.BodyType; left: MatterJS.BodyType; right: MatterJS.BodyType; };
   isTouching: { left: boolean; right: boolean; ground: boolean; };
   hangingConstraint: MatterJS.ConstraintType | undefined;
-  touchingAt: Phaser.Types.Math.Vector2Like | undefined;
+  touchingAt: Phaser.Math.Vector2 | undefined;
 
   constructor(world: Phaser.Physics.Matter.World, x: number, y: number) {
     const w = 32;
     const h = 40;
     const mainBody = world.scene.matter.bodies.rectangle(w / 2, h / 2, 24, 30, {
       chamfer: { radius: 10 },
-      friction: 0.001
+      friction: 0.5
     });
     const sensors = {
       bottom: world.scene.matter.bodies.rectangle(w / 2, h - 5, w * 0.25, 2, { isSensor: true }),
@@ -54,7 +54,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
 
     this.touchingAt = new Phaser.Math.Vector2(x, y);
     // Setup initial state
-    this.enterStateClinging();
+    this.enterStateClinging(true);
   }
 
   update(keyA: KeyState, keyB: KeyState) {
@@ -68,13 +68,15 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
       case "clinging":
         if (keyA === "pressed") {
           this.enterStatePrepping();
+        } else if (keyB === "holding" && this.touchingAt) {
+          this.enterStateClimbing(this.touchingAt);
         } else if (!this.isTouching.left && !this.isTouching.right) {
           this.enterStateFalling();
         }
         break;
       case "prepping":
         if (keyB === "pressed") {
-          this.enterStateClinging()
+          this.enterStateClinging(true)
         } else if (keyA === "pressed") {
           this.enterStateJumping();
         } else if (!this.isTouching.left && !this.isTouching.right) {
@@ -83,15 +85,43 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
         break;
       case "jumping":
         if (this.isTouching.left || this.isTouching.right) {
-          this.enterStateClinging();
+          this.enterStateClinging(true);
         }
     }
   }
 
-  private enterStateClinging() {
+  private enterStateClinging(updateConstraint: boolean) {
     this.state = "clinging";
-    this.play({ key: 'Idle', repeat: -1, repeatDelay: 2000 });
-    this.replaceHangingConstraint(this.touchingAt);
+    this.playAfterRepeat({ key: 'Idle', repeat: -1, repeatDelay: 2000 });
+
+    if (updateConstraint) {
+      this.replaceHangingConstraint(this.touchingAt);
+    }
+  }
+
+  private enterStateClimbing(position: Phaser.Math.Vector2) {
+    const climbFrom = new Phaser.Math.Vector2(position.x, position.y - 24);
+
+    this.state = "climbing";
+    this.play("climb").playAfterRepeat("Idle");
+    this.scene.time.delayedCall(
+      200,
+      () => {
+        if (this.state !== "climbing") {
+          return;
+        }
+
+        if (this.scene.matter.intersectPoint(climbFrom.x, climbFrom.y).length === 0) {
+          this.play("Idle")
+          this.enterStateClinging(false);
+          return;
+        }
+
+        this.replaceHangingConstraint(climbFrom, 0.1);
+
+        this.scene.time.delayedCall(100, () => this.enterStateClinging(false));
+      }
+    )
   }
 
   private enterStatePrepping(): void {
@@ -114,13 +144,20 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     this.replaceHangingConstraint();
   }
 
-  private replaceHangingConstraint(position?: Phaser.Types.Math.Vector2Like) {
+  private replaceHangingConstraint(position?: Phaser.Math.Vector2, elasticity = 0.9) {
+    if (position && this.scene.matter.intersectPoint(position.x, position.y).length === 0) {
+      position = undefined;
+    }
+
     if (this.hangingConstraint) {
       this.scene.matter.world.removeConstraint(this.hangingConstraint);
     }
 
     this.hangingConstraint = position ?
-      this.scene.matter.add.worldConstraint(<BodyType>this.body, 14, 0.9, { pointA: position }) :
+      this.scene.matter.add.worldConstraint(<BodyType>this.body, 14, elasticity, {
+        pointA: new Phaser.Math.Vector2(Math.round(position.x), Math.round(position.y)),
+        damping: 1
+      }) :
       undefined;
   }
 

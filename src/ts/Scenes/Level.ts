@@ -4,6 +4,7 @@
 */
 
 import Climber from "../Prefabs/Climber";
+import IceBlock from "../Prefabs/IceBlock";
 
 export class LevelConfig {
   constructor(public key: string) { }
@@ -24,20 +25,29 @@ export default class Level extends Phaser.Scene {
   public preload(): void {
     // Preload as needed.
     this.animations = this.anims.createFromAseprite('climber');
+    this.animations = this.anims.createFromAseprite('iceblock');
   }
 
   public create(levelConfig: LevelConfig): void {
     const map = this.make.tilemap({ key: levelConfig.key });
 
-    const cliffTiles = map.addTilesetImage("cliffs", "cliffs");
+    const tiles = [
+      map.addTilesetImage("cliffs", "cliffs"),
+      map.addTilesetImage("iceblock", "iceblock"),
+    ];
 
-    const backgroundLayer = map.createLayer("background", cliffTiles, 0, 0).setAlpha(0.7);
-    const cliffsLayer = map.createLayer("cliffs", cliffTiles, 0, 0);
+    const backgroundLayer = map.createLayer("background", tiles, 0, 0).setAlpha(0.7);
+    const cliffsLayer = map.createLayer("cliffs", tiles[0], 0, 0);
     cliffsLayer.setCollisionByProperty({ collides: true });
     this.matter.world.convertTiles(cliffsLayer.getTilesWithin().filter(x => x.collides), {
       friction: 0.001,
       chamfer: 4
     });
+
+    const iceLayer = map.getLayer("ice");
+    iceLayer.data.forEach(row => row.filter(t => t.properties.collides).forEach(tile => {
+      new IceBlock(this.matter.world, 8 + tile.x * iceLayer.tileWidth, 8 + tile.y * iceLayer.tileHeight);
+    }))
 
     const camera = this.cameras.main;
     camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);

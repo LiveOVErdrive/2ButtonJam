@@ -4,7 +4,7 @@
 */
 
 import Utilities from "../Utilities";
-import MainGame from "./MainGame";
+import Level from "./Level";
 import MainSettings from "./MainSettings";
 
 export default class MainMenu extends Phaser.Scene {
@@ -28,7 +28,7 @@ export default class MainMenu extends Phaser.Scene {
       .setAlign("center")
       .setOrigin(0.5);
     newGameText.setInteractive();
-    newGameText.on("pointerdown", () => { this.scene.start(MainGame.Name); }, this);
+    newGameText.on("pointerdown", () => { this.scene.start(Level.Name); }, this);
 
     const settingsText = this.add.text(this.cameras.main.centerX, textYPosition * 2, "Settings");
     settingsText.setOrigin(0.5);

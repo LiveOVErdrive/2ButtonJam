@@ -5,12 +5,15 @@
 
 import Climber from "../Prefabs/Climber";
 
+export class LevelConfig {
+  constructor(public key: string) { }
+}
 
-export default class MainGame extends Phaser.Scene {
+export default class Level extends Phaser.Scene {
   /**
    * Unique name of the scene.
    */
-  public static Name = "MainGame";
+  public static Name = "Level";
   animations: Phaser.Animations.Animation[];
   climber: Climber;
   keyA: Phaser.Input.Keyboard.Key;
@@ -23,20 +26,18 @@ export default class MainGame extends Phaser.Scene {
     this.animations = this.anims.createFromAseprite('climber');
   }
 
-  public create(): void {
+  public create(levelConfig: LevelConfig): void {
+    const map = this.make.tilemap({ key: levelConfig.key });
 
-    const map = this.make.tilemap({ key: "level1" });
+    const cliffTiles = map.addTilesetImage("cliffs", "cliffs");
 
-    const tileset = map.addTilesetImage("cliffs", "cliffs");
-
-    const backgroundLayer = map.createLayer("background", tileset, 0, 0).setAlpha(0.7);
-    const cliffsLayer = map.createLayer("cliffs", tileset, 0, 0);
+    const backgroundLayer = map.createLayer("background", cliffTiles, 0, 0).setAlpha(0.7);
+    const cliffsLayer = map.createLayer("cliffs", cliffTiles, 0, 0);
     cliffsLayer.setCollisionByProperty({ collides: true });
-    this.matter.world.convertTilemapLayer(cliffsLayer);
-
-    // Should be replaced with per tile handling that inspects the tile properties for what values to use.
-    cliffsLayer.getTilesWithin().forEach(x =>
-      (<Phaser.Physics.Matter.TileBody>(<any>x.physics).matterBody)?.setFriction(0.001));
+    this.matter.world.convertTiles(cliffsLayer.getTilesWithin().filter(x => x.collides), {
+      friction: 0.001,
+      chamfer: 4
+    });
 
     const camera = this.cameras.main;
     camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -45,18 +46,19 @@ export default class MainGame extends Phaser.Scene {
     this.climber = new Climber(this.matter.world, x!, y!);
     this.climber.setFacing("right");
     camera.startFollow(this.climber, true);
+    camera.deadzone = new Phaser.Geom.Rectangle(100, 100, 600, 400);
 
     // Setup event listeners
     this.keyA = this.input.keyboard.addKey("SPACE");
     this.keyA.on("up", () => this.keyPressedA = true, this);
     this.keyB = this.input.keyboard.addKey("SHIFT");
-    this.keyB.on("up", () => this.keyPressedA = true, this);
+    this.keyB.on("up", () => this.keyPressedB = true, this);
   }
 
   public update() {
     this.climber.update(
-      this.keyPressedA ? "pressed" : undefined,
-      this.keyPressedB ? "pressed" : undefined
+      this.keyPressedA ? "pressed" : this.keyA.isDown ? "holding" : undefined,
+      this.keyPressedB ? "pressed" : this.keyB.isDown ? "holding" : undefined
     );
 
     this.keyPressedA = false;

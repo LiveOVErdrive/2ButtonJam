@@ -5,7 +5,7 @@
 
 import SplashScreen from "./SplashScreen";
 import Utilities from "../Utilities";
-import MainGame from "./MainGame";
+import Level, { LevelConfig } from "./Level";
 
 export default class Preloader extends Phaser.Scene {
   /**
@@ -26,7 +26,7 @@ export default class Preloader extends Phaser.Scene {
   }
 
   public create(): void {
-    this.scene.start(MainGame.Name);
+    this.scene.start(Level.Name, new LevelConfig("level1"));
   }
 
   public update(): void {

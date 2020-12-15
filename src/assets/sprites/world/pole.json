@@ -158,6 +158,22 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 },
     "sourceSize": { "w": 16, "h": 32 },
     "duration": 100
+   },
+   "20": {
+    "frame": { "x": 0, "y": 128, "w": 16, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 },
+    "sourceSize": { "w": 16, "h": 32 },
+    "duration": 100
+   },
+   "21": {
+    "frame": { "x": 16, "y": 128, "w": 16, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 32 },
+    "sourceSize": { "w": 16, "h": 32 },
+    "duration": 100
    }
  },
  "meta": {
@@ -165,14 +181,13 @@
   "version": "1.2.25-x64",
   "image": "pole.png",
   "format": "RGBA8888",
-  "size": { "w": 80, "h": 128 },
+  "size": { "w": 80, "h": 160 },
   "scale": "1",
   "frameTags": [
   ],
   "layers": [
    { "name": "Layer 1", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 2", "opacity": 255, "blendMode": "normal" },
-   { "name": "Layer 4", "opacity": 255, "blendMode": "normal" }
+   { "name": "Layer 2", "opacity": 255, "blendMode": "normal" }
   ],
   "slices": [
   ]

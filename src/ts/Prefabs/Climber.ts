@@ -1,3 +1,7 @@
+/* 
+ * copyright 2020, Justin Reardon.
+*/
+
 import { BodyType } from "matter";
 import Utilities from "../Utilities";
 
@@ -24,8 +28,8 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     const sensors = {
       bottom: world.scene.matter.bodies.rectangle(w / 2, h - 5, w * 0.25, 2, { isSensor: true }),
       top: world.scene.matter.bodies.rectangle(w / 2, 4, w * 0.1, 2, { isSensor: true }),
-      left: world.scene.matter.bodies.rectangle(4, h / 2 - 8, 4, h * 0.25, { isSensor: true }),
-      right: world.scene.matter.bodies.rectangle(28, h / 2 - 8, 4, h * 0.25, { isSensor: true })
+      left: world.scene.matter.bodies.rectangle(4, h / 2 - 6, 4, h * 0.35, { isSensor: true }),
+      right: world.scene.matter.bodies.rectangle(28, h / 2 - 6, 4, h * 0.35, { isSensor: true })
     };
 
     super(world, 0, 0, 'climber', undefined, {
@@ -135,23 +139,27 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
           return;
         }
 
-        if (this.scene.matter.intersectPoint(climbFrom.x, climbFrom.y).length === 0) {
+        const top = this.getTopCenter();
+        if (
+          //this.scene.matter.intersectPoint(climbFrom.x, climbFrom.y).length === 0 ||
+          this.scene.matter.intersectRect(climbFrom.x - 2, climbFrom.y - 2, 4, 4).length === 0 ||
+          this.scene.matter.intersectPoint(top.x, top.y - 24).length > 0
+        ) {
           this.play("Idle")
           this.enterStateClinging(false);
           return;
         }
-        this.replaceHangingConstraint(climbFrom, 0.1);
-
         const direction = this.facing === "left" ? -1 : 1;
         this.applyForce(new Phaser.Math.Vector2(direction * 0.0, -0.03));
 
         this.scene.time.delayedCall(
-          200,
+          150,
           () => {
             if (this.state !== "climbing") {
               return;
             }
-            this.enterStateClinging(true);
+            this.replaceHangingConstraint(climbFrom);
+            this.enterStateClinging(false);
           }
         )
       }
@@ -184,7 +192,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     }
 
     if (position) {
-      const intersections = this.scene.matter.intersectPoint(position.x, position.y);
+      const intersections = this.scene.matter.intersectRect(position.x - 2, position.y - 2, 4, 4);
       if (intersections.length === 0) {
         position = undefined;
       }
@@ -282,7 +290,6 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
             this.touchingAt.x = bodyB.bounds.min.x;
           } else {
             this.touchingAt.x = bodyB.bounds.max.x;
-
           }
         }
       } else if (facing === "down") {

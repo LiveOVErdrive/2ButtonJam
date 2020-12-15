@@ -35,7 +35,8 @@ export default class Level extends Phaser.Scene {
     const cliffsLayer = map.createLayer("cliffs", cliffTiles, 0, 0);
     cliffsLayer.setCollisionByProperty({ collides: true });
     this.matter.world.convertTiles(cliffsLayer.getTilesWithin().filter(x => x.collides), {
-      friction: 0.001
+      friction: 0.001,
+      chamfer: 4
     });
 
     const camera = this.cameras.main;

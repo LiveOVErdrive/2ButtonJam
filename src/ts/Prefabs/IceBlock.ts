@@ -27,8 +27,6 @@ export default class IceBlock extends Phaser.Physics.Matter.Sprite {
     world.scene.add.existing(this);
     this.setFixedRotation();
     this.setIgnoreGravity(true);
-    this.setCollisionCategory(1);
-    this.setCollisionGroup(0);
 
     matterCollision(world.scene).addOnCollideStart({
       objectA: this,

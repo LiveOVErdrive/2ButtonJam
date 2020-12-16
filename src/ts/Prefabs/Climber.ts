@@ -3,11 +3,11 @@
 */
 
 import { BodyType } from "matter";
-import { CollisionEvent, CollisionGroups, matterCollision } from "../Collisions";
+import { CollisionEvent, CollisionGroups as CollisionCategories, matterCollision } from "../Collisions";
 import Utilities from "../Utilities";
 
 type Facing = "left" | "right" | "down";
-type State = "clinging" | "hanging" | "prepping" | "jumping" | "climbing";
+type State = "clinging" | "hanging" | "prepping" | "jumping" | "climbing" | "dead";
 type KeyState = "pressed" | "holding" | undefined;
 
 export default class Climber extends Phaser.Physics.Matter.Sprite {
@@ -24,18 +24,22 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     const h = 40;
     const mainBody = world.scene.matter.bodies.rectangle(w / 2, h / 2, 24, 32, {
       chamfer: { radius: 10 },
-      friction: 0.1,
+      friction: 0.0,
+
       collisionFilter: {
-        category: CollisionGroups.Player,
+        category: CollisionCategories.Player,
         group: 0,
-        mask: CollisionGroups.Wall | CollisionGroups.Ice
+        mask: CollisionCategories.SolidObjects
       }
     });
+    const sensorSettings: MatterJS.IChamferableBodyDefinition = {
+      isSensor: true
+    };
     const sensors = {
-      bottom: world.scene.matter.bodies.rectangle(w / 2, h - 5, w * 0.25, 2, { isSensor: true }),
-      top: world.scene.matter.bodies.rectangle(w / 2, 4, w * 0.1, 2, { isSensor: true }),
-      left: world.scene.matter.bodies.rectangle(4, h / 2 - 6, 4, h * 0.35, { isSensor: true }),
-      right: world.scene.matter.bodies.rectangle(28, h / 2 - 6, 4, h * 0.35, { isSensor: true })
+      bottom: world.scene.matter.bodies.rectangle(w / 2, h - 5, w * 0.25, 2, sensorSettings),
+      top: world.scene.matter.bodies.rectangle(w / 2, 4, w * 0.1, 2, sensorSettings),
+      left: world.scene.matter.bodies.rectangle(4, h / 2 - 6, 4, h * 0.35, sensorSettings),
+      right: world.scene.matter.bodies.rectangle(28, h / 2 - 6, 4, h * 0.35, sensorSettings)
     };
 
     super(world, 0, 0, 'climber', undefined, {
@@ -56,6 +60,13 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     matterCollision(world.scene).addOnCollideActive({
       objectA: [this.sensors.bottom, this.sensors.top, this.sensors.left, this.sensors.right],
       callback: this.onSensorCollide,
+      context: this
+    });
+
+    // Spikes only collide with the body proper
+    matterCollision(world.scene).addOnCollideStart({
+      objectA: mainBody,
+      callback: this.onBodyCollide,
       context: this
     });
 
@@ -192,6 +203,15 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     this.replaceHangingConstraint();
   }
 
+  enterStateDead() {
+    this.state = "dead";
+    this.play('DEATH');
+    this.replaceHangingConstraint();
+    this.setCollidesWith(0);
+    this.setVelocityX(0);
+    this.setVelocityY(-2);
+  }
+
   private replaceHangingConstraint(position?: Phaser.Math.Vector2, elasticity = 1) {
     if (this.hangingConstraint) {
       this.scene.matter.world.removeConstraint(this.hangingConstraint);
@@ -267,7 +287,10 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     // that we can use that logic inside of update to move the player.
     let touchPoint: any | undefined = undefined;
     let facing: Facing | undefined;
-    if (bodyB.isSensor) return; // We only care about collisions with physical objects
+    if (bodyB.isSensor || !(bodyB.collisionFilter.category & CollisionCategories.Grabbable)) {
+      return; // We only care about collisions with physical objects
+    }
+
     if (bodyA === this.sensors.left) {
       this.isTouching.left = true;
       facing = "right";
@@ -303,6 +326,16 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
           this.touchingAt.y = bodyB.bounds.max.y;
         }
       }
+    }
+  }
+
+  onBodyCollide({ bodyA, bodyB, pair }: CollisionEvent) {
+    if (this.state === "dead") {
+      return;
+    }
+
+    if (bodyB.collisionFilter.category & CollisionCategories.Spike) {
+      this.enterStateDead();
     }
   }
 

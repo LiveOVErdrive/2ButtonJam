@@ -2,10 +2,20 @@
  * copyright 2020, Justin Reardon.
 */
 
-export const CollisionGroups = {
-  Player: 1,
-  Wall: 2,
-  Ice: 4
+export class CollisionGroups {
+  static Player = 1;
+  static Wall = 2;
+  static Ice = 4;
+  static Spike = 8;
+
+  static SolidObjects =
+    CollisionGroups.Spike |
+    CollisionGroups.Wall |
+    CollisionGroups.Ice;
+
+  static Grabbable =
+    CollisionGroups.Wall |
+    CollisionGroups.Ice;
 }
 
 export type CollisionEvent = {

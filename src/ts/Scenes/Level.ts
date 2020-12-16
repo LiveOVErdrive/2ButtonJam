@@ -35,12 +35,13 @@ export default class Level extends Phaser.Scene {
 
     const tiles = [
       map.addTilesetImage("cliffs", "cliffs"),
-      map.addTilesetImage("iceblock", "iceblock"),
+      map.addTilesetImage("spikes", "spikes"),
     ];
 
-    const backgroundLayer = map.createLayer("background", tiles, 0, 0).setAlpha(0.7);
-    const cliffsLayer = map.createLayer("cliffs", tiles[0], 0, 0);
-    cliffsLayer.setCollisionByProperty({ collides: true });
+    map.createLayer("background", tiles, 0, 0).setAlpha(0.7);
+
+    const cliffsLayer = map.createLayer("cliffs", tiles[0], 0, 0)
+      .setCollisionByProperty({ collides: true });
     this.matter.world.convertTiles(cliffsLayer.getTilesWithin().filter(x => x.collides), {
       friction: 0.001,
       chamfer: 4,
@@ -49,6 +50,21 @@ export default class Level extends Phaser.Scene {
         group: 0,
         mask: CollisionGroups.Player
       }
+    });
+
+    const spikesLayer = map.createLayer("spikes", tiles[1], 0, 0)
+      .setCollisionByProperty({ collides: true });
+    this.matter.world.convertTiles(spikesLayer.getTilesWithin().filter(x => x.collides), {
+      friction: 1,
+      chamfer: 4,
+      isSensor: true,
+      scale: 0.95,
+      collisionFilter: {
+        category: CollisionGroups.Spike,
+        group: 0,
+        mask: CollisionGroups.Player
+      },
+
     });
 
     const iceLayer = map.getLayer("ice");

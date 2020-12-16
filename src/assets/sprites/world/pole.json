@@ -180,7 +180,7 @@
   "app": "http://www.aseprite.org/",
   "version": "1.2.25-x64",
   "image": "pole.png",
-  "format": "RGBA8888",
+  "format": "I8",
   "size": { "w": 80, "h": 160 },
   "scale": "1",
   "frameTags": [

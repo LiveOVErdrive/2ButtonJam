@@ -24,14 +24,6 @@
     "duration": 100
    },
    "3": {
-    "frame": { "x": 69, "y": 0, "w": 23, "h": 23 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 23, "h": 23 },
-    "sourceSize": { "w": 23, "h": 23 },
-    "duration": 100
-   },
-   "4": {
     "frame": { "x": 0, "y": 23, "w": 23, "h": 23 },
     "rotated": false,
     "trimmed": false,
@@ -39,8 +31,16 @@
     "sourceSize": { "w": 23, "h": 23 },
     "duration": 100
    },
+   "4": {
+    "frame": { "x": 23, "y": 23, "w": 23, "h": 23 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 23, "h": 23 },
+    "sourceSize": { "w": 23, "h": 23 },
+    "duration": 100
+   },
    "5": {
-    "frame": { "x": 69, "y": 0, "w": 23, "h": 23 },
+    "frame": { "x": 0, "y": 23, "w": 23, "h": 23 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 23, "h": 23 },
@@ -64,14 +64,6 @@
     "duration": 100
    },
    "8": {
-    "frame": { "x": 23, "y": 23, "w": 23, "h": 23 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 23, "h": 23 },
-    "sourceSize": { "w": 23, "h": 23 },
-    "duration": 100
-   },
-   "9": {
     "frame": { "x": 46, "y": 23, "w": 23, "h": 23 },
     "rotated": false,
     "trimmed": false,
@@ -79,15 +71,7 @@
     "sourceSize": { "w": 23, "h": 23 },
     "duration": 100
    },
-   "10": {
-    "frame": { "x": 69, "y": 23, "w": 23, "h": 23 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 23, "h": 23 },
-    "sourceSize": { "w": 23, "h": 23 },
-    "duration": 100
-   },
-   "11": {
+   "9": {
     "frame": { "x": 0, "y": 46, "w": 23, "h": 23 },
     "rotated": false,
     "trimmed": false,
@@ -95,7 +79,7 @@
     "sourceSize": { "w": 23, "h": 23 },
     "duration": 100
    },
-   "12": {
+   "10": {
     "frame": { "x": 23, "y": 46, "w": 23, "h": 23 },
     "rotated": false,
     "trimmed": false,
@@ -103,16 +87,8 @@
     "sourceSize": { "w": 23, "h": 23 },
     "duration": 100
    },
-   "13": {
+   "11": {
     "frame": { "x": 46, "y": 46, "w": 23, "h": 23 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 23, "h": 23 },
-    "sourceSize": { "w": 23, "h": 23 },
-    "duration": 100
-   },
-   "14": {
-    "frame": { "x": 69, "y": 46, "w": 23, "h": 23 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 23, "h": 23 },
@@ -125,11 +101,11 @@
   "version": "1.2.25-x64",
   "image": "snowflake.png",
   "format": "RGBA8888",
-  "size": { "w": 92, "h": 69 },
+  "size": { "w": 69, "h": 69 },
   "scale": "1",
   "frameTags": [
    { "name": "Spin", "from": 0, "to": 7, "direction": "forward" },
-   { "name": "Pickup", "from": 8, "to": 14, "direction": "forward" }
+   { "name": "Pickup", "from": 8, "to": 11, "direction": "forward" }
   ],
   "layers": [
    { "name": "Layer 1", "opacity": 255, "blendMode": "normal" },

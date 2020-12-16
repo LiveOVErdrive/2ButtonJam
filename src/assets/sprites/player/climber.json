@@ -382,6 +382,14 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
     "sourceSize": { "w": 32, "h": 40 },
     "duration": 100
+   },
+   "48": {
+    "frame": { "x": 106, "y": 173, "w": 34, "h": 42 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 32, "h": 40 },
+    "sourceSize": { "w": 32, "h": 40 },
+    "duration": 100
    }
  },
  "meta": {
@@ -396,7 +404,8 @@
    { "name": "preppingJump", "from": 26, "to": 26, "direction": "forward" },
    { "name": "Jump", "from": 27, "to": 27, "direction": "forward" },
    { "name": "climb", "from": 28, "to": 31, "direction": "forward" },
-   { "name": "hang", "from": 32, "to": 47, "direction": "forward" }
+   { "name": "hang", "from": 32, "to": 47, "direction": "forward" },
+   { "name": "DEATH", "from": 48, "to": 48, "direction": "forward" }
   ],
   "layers": [
    { "name": "Layer 2", "opacity": 255, "blendMode": "normal" },

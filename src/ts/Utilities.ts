@@ -13,8 +13,4 @@ export default class Utilities {
   public static Log(message: string): void {
     console.log((new Date()).toISOString() + " : " + message);
   }
-
-  public static matterCollision(scene: Phaser.Scene & any): any {
-    return scene.matterCollision;
-  }
 }

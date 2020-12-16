@@ -3,6 +3,7 @@
  * Portions copyright 2020, Justin Reardon.
 */
 
+import { CollisionGroups } from "../Collisions";
 import Climber from "../Prefabs/Climber";
 import IceBlock from "../Prefabs/IceBlock";
 
@@ -26,6 +27,7 @@ export default class Level extends Phaser.Scene {
     // Preload as needed.
     this.animations = this.anims.createFromAseprite('climber');
     this.animations = this.anims.createFromAseprite('iceblock');
+    this.cameras.main.zoom = 2;
   }
 
   public create(levelConfig: LevelConfig): void {
@@ -41,7 +43,12 @@ export default class Level extends Phaser.Scene {
     cliffsLayer.setCollisionByProperty({ collides: true });
     this.matter.world.convertTiles(cliffsLayer.getTilesWithin().filter(x => x.collides), {
       friction: 0.001,
-      chamfer: 4
+      chamfer: 4,
+      collisionFilter: {
+        category: CollisionGroups.Wall,
+        group: 0,
+        mask: CollisionGroups.Player
+      }
     });
 
     const iceLayer = map.getLayer("ice");
@@ -56,7 +63,7 @@ export default class Level extends Phaser.Scene {
     this.climber = new Climber(this.matter.world, x!, y!);
     this.climber.setFacing("right");
     camera.startFollow(this.climber, true);
-    camera.deadzone = new Phaser.Geom.Rectangle(100, 100, 600, 400);
+    camera.deadzone = new Phaser.Geom.Rectangle(100, 100, 200, 100);
 
     // Setup event listeners
     this.keyA = this.input.keyboard.addKey("SPACE");
@@ -66,7 +73,7 @@ export default class Level extends Phaser.Scene {
   }
 
   public update() {
-    this.climber.update(
+    this.climber.updateAction(
       this.keyPressedA ? "pressed" : this.keyA.isDown ? "holding" : undefined,
       this.keyPressedB ? "pressed" : this.keyB.isDown ? "holding" : undefined
     );

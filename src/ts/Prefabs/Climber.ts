@@ -3,6 +3,7 @@
 */
 
 import { BodyType } from "matter";
+import { CollisionEvent, CollisionGroups, matterCollision } from "../Collisions";
 import Utilities from "../Utilities";
 
 type Facing = "left" | "right" | "down";
@@ -23,7 +24,12 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     const h = 40;
     const mainBody = world.scene.matter.bodies.rectangle(w / 2, h / 2, 24, 32, {
       chamfer: { radius: 10 },
-      friction: 0.1
+      friction: 0.1,
+      collisionFilter: {
+        category: CollisionGroups.Player,
+        group: 0,
+        mask: CollisionGroups.Wall | CollisionGroups.Ice
+      }
     });
     const sensors = {
       bottom: world.scene.matter.bodies.rectangle(w / 2, h - 5, w * 0.25, 2, { isSensor: true }),
@@ -42,12 +48,12 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     this.setPosition(x, y);
 
     this.sensors = sensors;
-    Utilities.matterCollision(world.scene).addOnCollideStart({
+    matterCollision(world.scene).addOnCollideStart({
       objectA: [this.sensors.bottom, this.sensors.top, this.sensors.left, this.sensors.right],
       callback: this.onSensorCollide,
       context: this
     });
-    Utilities.matterCollision(world.scene).addOnCollideActive({
+    matterCollision(world.scene).addOnCollideActive({
       objectA: [this.sensors.bottom, this.sensors.top, this.sensors.left, this.sensors.right],
       callback: this.onSensorCollide,
       context: this
@@ -62,7 +68,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     this.enterStateClinging(true);
   }
 
-  update(keyA: KeyState, keyB: KeyState) {
+  updateAction(keyA: KeyState, keyB: KeyState) {
     if (this.isTouching.top) {
       this.setFacing("down");
     } else if (this.isTouching.left && !this.isTouching.right && !this.isTouching.ground) {
@@ -256,7 +262,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     this.isTouching.top = false;
   }
 
-  onSensorCollide({ bodyA, bodyB, pair }: { bodyA: MatterJS.BodyType, bodyB: MatterJS.BodyType, pair: MatterJS.ICollisionPair }) {
+  onSensorCollide({ bodyA, bodyB, pair }: CollisionEvent) {
     // Watch for the player colliding with walls/objects on either side and the ground below, so
     // that we can use that logic inside of update to move the player.
     let touchPoint: any | undefined = undefined;

@@ -13,7 +13,7 @@ import MainSettings from "./Scenes/MainSettings";
 import PhaserMatterCollisionPlugin from "phaser-matter-collision-plugin";
 
 const gameWidth = 800;
-const gameHeight = 800;
+const gameHeight = 600;
 
 function gameConfig(debug: boolean): Phaser.Types.Core.GameConfig {
   return {

@@ -41,45 +41,32 @@ export default class Level extends Phaser.Scene {
 
     map.createLayer("background", tiles, 0, 0).setAlpha(0.7);
 
-    const cliffsLayer = map.createLayer("cliffs", tiles[0], 0, 0)
+    const cliffsLayer = map.createLayer("cliffs", tiles, 0, 0)
       .setCollisionByProperty({ collides: true });
-    this.matter.world.convertTiles(cliffsLayer.getTilesWithin().filter(x => x.collides && x.properties.grabbable), {
-      friction: 0.001,
-      chamfer: 4,
-      collisionFilter: {
-        category: CollisionCategories.Solid | CollisionCategories.Grabbable,
-        group: 0,
-        mask: CollisionCategories.Player
+    cliffsLayer.getTilesWithin().filter(x => x.collides).forEach(tile => {
+      if (tile.properties.iceblock) {
+        new IceBlock(this.matter.world, 8 + tile.x * 16, 8 + tile.y * 16);
+      } else {
+        const categories =
+          CollisionCategories.Solid |
+          (tile.properties.grabbable ? CollisionCategories.Grabbable : 0) |
+          (tile.properties.fatal ? CollisionCategories.Fatal : 0);
+        this.matter.world.convertTiles([tile], <any>{
+          shape: {
+            type: 'rectange',
+          },
+          friction: 0.001,
+          chamfer: 2,
+          collisionFilter: {
+            category: categories,
+            group: 0,
+            mask: CollisionCategories.Player
+          }
+        })
       }
-    });
-    this.matter.world.convertTiles(cliffsLayer.getTilesWithin().filter(x => x.collides && !x.properties.grabbable), {
-      friction: 0.001,
-      chamfer: 4,
-      collisionFilter: {
-        category: CollisionCategories.Solid,
-        group: 0,
-        mask: CollisionCategories.Player
-      }
-    });
 
-    const spikesLayer = map.createLayer("spikes", tiles[1], 0, 0)
-      .setCollisionByProperty({ collides: true });
-    this.matter.world.convertTiles(spikesLayer.getTilesWithin().filter(x => x.collides), {
-      friction: 1,
-      chamfer: 4,
-      isSensor: true,
-      collisionFilter: {
-        category: CollisionCategories.Solid | CollisionCategories.Fatal,
-        group: 0,
-        mask: CollisionCategories.Player
-      },
 
     });
-
-    const iceLayer = map.getLayer("ice");
-    iceLayer.data.forEach(row => row.filter(t => t.properties.collides).forEach(tile => {
-      new IceBlock(this.matter.world, 8 + tile.x * iceLayer.tileWidth, 8 + tile.y * iceLayer.tileHeight);
-    }));
 
     const poles = map.getObjectLayer("objects").objects.forEach(obj => {
       switch (obj.name) {

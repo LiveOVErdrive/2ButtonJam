@@ -24,6 +24,7 @@ export default class Preloader extends Phaser.Scene {
     this.load.image("cliffs", "sprites/world/cliff.png");
     this.load.image("iceblock", "sprites/world/iceblock.png");
     this.load.image("spikes", "sprites/world/spikes.png");
+    this.load.image("pole", "sprites/world/pole_noanim.png");
     this.load.tilemapTiledJSON("level1", "maps/level1.json");
   }
 

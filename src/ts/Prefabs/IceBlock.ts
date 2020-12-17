@@ -2,7 +2,7 @@
  * copyright 2020, Justin Reardon.
 */
 
-import { CollisionEvent, CollisionGroups, matterCollision } from "../Collisions";
+import { CollisionEvent, CollisionCategories, matterCollision } from "../Collisions";
 
 const msBeforeFlash = 1000;
 const msBeforeCrumble = 2000;
@@ -18,9 +18,9 @@ export default class IceBlock extends Phaser.Physics.Matter.Sprite {
       isStatic: true,
       friction: 0,
       collisionFilter: {
-        category: CollisionGroups.Ice,
+        category: CollisionCategories.Solid | CollisionCategories.Grabbable,
         group: 0,
-        mask: CollisionGroups.Player
+        mask: CollisionCategories.Player
       }
     });
 

@@ -3,7 +3,7 @@
  * Portions copyright 2020, Justin Reardon.
 */
 
-import { CollisionGroups } from "../Collisions";
+import { CollisionCategories } from "../Collisions";
 import Climber from "../Prefabs/Climber";
 import IceBlock from "../Prefabs/IceBlock";
 
@@ -42,13 +42,22 @@ export default class Level extends Phaser.Scene {
 
     const cliffsLayer = map.createLayer("cliffs", tiles[0], 0, 0)
       .setCollisionByProperty({ collides: true });
-    this.matter.world.convertTiles(cliffsLayer.getTilesWithin().filter(x => x.collides), {
+    this.matter.world.convertTiles(cliffsLayer.getTilesWithin().filter(x => x.collides && x.properties.grabbable), {
       friction: 0.001,
       chamfer: 4,
       collisionFilter: {
-        category: CollisionGroups.Wall,
+        category: CollisionCategories.Solid | CollisionCategories.Grabbable,
         group: 0,
-        mask: CollisionGroups.Player
+        mask: CollisionCategories.Player
+      }
+    });
+    this.matter.world.convertTiles(cliffsLayer.getTilesWithin().filter(x => x.collides && !x.properties.grabbable), {
+      friction: 0.001,
+      chamfer: 4,
+      collisionFilter: {
+        category: CollisionCategories.Solid,
+        group: 0,
+        mask: CollisionCategories.Player
       }
     });
 
@@ -58,11 +67,10 @@ export default class Level extends Phaser.Scene {
       friction: 1,
       chamfer: 4,
       isSensor: true,
-      scale: 0.95,
       collisionFilter: {
-        category: CollisionGroups.Spike,
+        category: CollisionCategories.Solid | CollisionCategories.Fatal,
         group: 0,
-        mask: CollisionGroups.Player
+        mask: CollisionCategories.Player
       },
 
     });
@@ -70,7 +78,24 @@ export default class Level extends Phaser.Scene {
     const iceLayer = map.getLayer("ice");
     iceLayer.data.forEach(row => row.filter(t => t.properties.collides).forEach(tile => {
       new IceBlock(this.matter.world, 8 + tile.x * iceLayer.tileWidth, 8 + tile.y * iceLayer.tileHeight);
-    }))
+    }));
+
+    const poles = map.getObjectLayer("objects").objects.forEach(obj => {
+      if (obj.type === "pole") {
+        this.matter.add.image(obj.x!, obj.y!, "pole", undefined, <any>{
+          shape: {
+            type: 'circle',
+            radius: 4
+          },
+          isStatic: true,
+          collisionFilter: {
+            category: CollisionCategories.Hangable,
+            group: 0,
+            mask: CollisionCategories.Player
+          }
+        })
+      }
+    });
 
     const camera = this.cameras.main;
     camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);

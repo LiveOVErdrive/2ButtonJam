@@ -2,20 +2,12 @@
  * copyright 2020, Justin Reardon.
 */
 
-export class CollisionGroups {
+export class CollisionCategories {
   static Player = 1;
-  static Wall = 2;
-  static Ice = 4;
-  static Spike = 8;
-
-  static SolidObjects =
-    CollisionGroups.Spike |
-    CollisionGroups.Wall |
-    CollisionGroups.Ice;
-
-  static Grabbable =
-    CollisionGroups.Wall |
-    CollisionGroups.Ice;
+  static Solid = 2;
+  static Grabbable = 4;
+  static Hangable = 8;
+  static Fatal = 0x80000000;
 }
 
 export type CollisionEvent = {

@@ -3,8 +3,7 @@
 */
 
 import { BodyType } from "matter";
-import { CollisionEvent, CollisionGroups as CollisionCategories, matterCollision } from "../Collisions";
-import Utilities from "../Utilities";
+import { CollisionEvent, CollisionCategories, matterCollision } from "../Collisions";
 
 type Facing = "left" | "right" | "down";
 type State = "clinging" | "hanging" | "prepping" | "jumping" | "climbing" | "dead";
@@ -29,15 +28,20 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
       collisionFilter: {
         category: CollisionCategories.Player,
         group: 0,
-        mask: CollisionCategories.SolidObjects
+        mask: CollisionCategories.Solid
       }
     });
     const sensorSettings: MatterJS.IChamferableBodyDefinition = {
-      isSensor: true
+      isSensor: true,
+      collisionFilter: {
+        category: CollisionCategories.Player,
+        group: 0,
+        mask: CollisionCategories.Grabbable | CollisionCategories.Hangable
+      }
     };
     const sensors = {
       bottom: world.scene.matter.bodies.rectangle(w / 2, h - 5, w * 0.25, 2, sensorSettings),
-      top: world.scene.matter.bodies.rectangle(w / 2, 4, w * 0.1, 2, sensorSettings),
+      top: world.scene.matter.bodies.rectangle(w / 2, 4, w * 0.3, 2, sensorSettings),
       left: world.scene.matter.bodies.rectangle(4, h / 2 - 6, 4, h * 0.35, sensorSettings),
       right: world.scene.matter.bodies.rectangle(28, h / 2 - 6, 4, h * 0.35, sensorSettings)
     };
@@ -90,7 +94,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
 
     switch (this.state) {
       case "clinging":
-        if (keyA === "holding") {
+        if (transitionToPreppingKeys(keyA, keyB)) {
           this.enterStatePrepping();
         } else if (keyB === "holding" && this.touchingAt) {
           this.enterStateClimbing(this.touchingAt);
@@ -99,35 +103,35 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
         }
         break;
       case "hanging":
-        if (keyA === "holding") {
+        if (transitionToPreppingKeys(keyA, keyB)) {
           this.enterStatePrepping();
-        } else if (keyB === "holding" && this.touchingAt) {
-          this.enterStateClimbing(this.touchingAt);
         } else if (!this.isTouching.top) {
           this.enterStateFalling();
         }
         break;
       case "prepping":
-        if (keyB === "pressed") {
-          this.enterStateClinging(true)
-        } else if (keyA !== "holding") {
+        if (!keyA) {
           this.enterStateJumping();
-        } else if (!this.isTouching.left && !this.isTouching.right) {
+        } else if (!this.isTouching.left && !this.isTouching.right && !this.isTouching.top) {
           this.enterStateFalling();
         }
         break;
       case "jumping":
-        if (this.isTouching.top) {
-          this.enterStateHanging(true);
-        } else if (this.isTouching.left || this.isTouching.right) {
-          this.enterStateClinging(true);
-        }
+        this.enterStateClingingOrHanging();
+    }
+  }
+
+  private enterStateClingingOrHanging() {
+    if (this.isTouching.top) {
+      this.enterStateHanging(true);
+    } else if (this.isTouching.left || this.isTouching.right) {
+      this.enterStateClinging(true);
     }
   }
 
   private enterStateClinging(updateConstraint: boolean) {
     this.state = "clinging";
-    this.playAfterRepeat({ key: 'Idle', repeat: -1, repeatDelay: 2000 });
+    this.play({ key: 'Idle', repeat: -1, repeatDelay: 2000 });
 
     if (updateConstraint) {
       this.replaceHangingConstraint(this.touchingAt);
@@ -184,13 +188,17 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
   }
 
   private enterStatePrepping(): void {
+
+    if (this.state !== "hanging") {
+      this.play('preppingJump');
+    }
+
     this.state = "prepping";
-    this.play('preppingJump');
   }
 
   enterStateJumping() {
     this.state = "jumping";
-    this.play('Jump');
+    this.playAfterRepeat('Jump');
     this.replaceHangingConstraint();
 
     const direction = this.facing === "left" ? -1 : 1;
@@ -287,17 +295,20 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     // that we can use that logic inside of update to move the player.
     let touchPoint: any | undefined = undefined;
     let facing: Facing | undefined;
-    if (bodyB.isSensor || !(bodyB.collisionFilter.category & CollisionCategories.Grabbable)) {
+    if (
+      bodyB.isSensor ||
+      !(bodyB.collisionFilter.category & (CollisionCategories.Grabbable | CollisionCategories.Hangable))
+    ) {
       return; // We only care about collisions with physical objects
     }
 
-    if (bodyA === this.sensors.left) {
+    if (bodyA === this.sensors.left && (bodyB.collisionFilter.category & CollisionCategories.Grabbable)) {
       this.isTouching.left = true;
       facing = "right";
-    } else if (bodyA === this.sensors.right) {
+    } else if (bodyA === this.sensors.right && (bodyB.collisionFilter.category & CollisionCategories.Grabbable)) {
       this.isTouching.right = true;
       facing = "left";
-    } else if (bodyA === this.sensors.top) {
+    } else if (bodyA === this.sensors.top && (bodyB.collisionFilter.category & CollisionCategories.Hangable)) {
       this.isTouching.top = true;
       facing = "down";
     } else if (bodyA === this.sensors.bottom) {
@@ -334,7 +345,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
       return;
     }
 
-    if (bodyB.collisionFilter.category & CollisionCategories.Spike) {
+    if (bodyB.collisionFilter.category & CollisionCategories.Fatal) {
       this.enterStateDead();
     }
   }
@@ -344,5 +355,9 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
       this.scene.matter.world.off("beforeupdate", this.resetTouching, this);
     }
   }
+}
+
+function transitionToPreppingKeys(keyA: string | undefined, keyB: string | undefined) {
+  return keyA === "holding" && !keyB;
 }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="30" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="4">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="30" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="6">
  <editorsettings>
   <export target="level1.json" format="json"/>
  </editorsettings>
@@ -158,7 +158,13 @@
   <object id="1" name="start" x="184.091" y="493.182">
    <point/>
   </object>
-  <object id="3" type="pole" x="224" y="304">
+  <object id="3" name="snowflake" x="144" y="184.045">
+   <point/>
+  </object>
+  <object id="4" name="pole" x="224" y="304">
+   <point/>
+  </object>
+  <object id="5" name="snowflake" x="224" y="448">
    <point/>
   </object>
  </objectgroup>

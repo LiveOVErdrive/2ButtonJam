@@ -28,7 +28,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
       collisionFilter: {
         category: CollisionCategories.Player,
         group: 0,
-        mask: CollisionCategories.Solid
+        mask: CollisionCategories.Solid | CollisionCategories.Fatal | CollisionCategories.Item
       }
     });
     const sensorSettings: MatterJS.IChamferableBodyDefinition = {
@@ -41,7 +41,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     };
     const sensors = {
       bottom: world.scene.matter.bodies.rectangle(w / 2, h - 5, w * 0.25, 2, sensorSettings),
-      top: world.scene.matter.bodies.rectangle(w / 2, 4, w * 0.3, 2, sensorSettings),
+      top: world.scene.matter.bodies.rectangle(w / 2, 3, w * 0.6, 4, sensorSettings),
       left: world.scene.matter.bodies.rectangle(4, h / 2 - 6, 4, h * 0.35, sensorSettings),
       right: world.scene.matter.bodies.rectangle(28, h / 2 - 6, 4, h * 0.35, sensorSettings)
     };
@@ -198,7 +198,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
 
   enterStateJumping() {
     this.state = "jumping";
-    this.playAfterRepeat('Jump');
+    this.play('Jump');
     this.replaceHangingConstraint();
 
     const direction = this.facing === "left" ? -1 : 1;
@@ -278,7 +278,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
       case "down":
         this.flipX = true;
         this.displayOriginX = 18;
-        this.displayOriginY = 20;
+        this.displayOriginY = 18;
         break;
     }
   }
@@ -302,15 +302,20 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
       return; // We only care about collisions with physical objects
     }
 
-    if (bodyA === this.sensors.left && (bodyB.collisionFilter.category & CollisionCategories.Grabbable)) {
-      this.isTouching.left = true;
-      facing = "right";
-    } else if (bodyA === this.sensors.right && (bodyB.collisionFilter.category & CollisionCategories.Grabbable)) {
-      this.isTouching.right = true;
-      facing = "left";
-    } else if (bodyA === this.sensors.top && (bodyB.collisionFilter.category & CollisionCategories.Hangable)) {
-      this.isTouching.top = true;
-      facing = "down";
+    if (bodyB.collisionFilter.category & CollisionCategories.Grabbable) {
+      if (bodyA === this.sensors.left) {
+        this.isTouching.left = true;
+        facing = "right";
+      } else if (bodyA === this.sensors.right) {
+        this.isTouching.right = true;
+        facing = "left";
+      }
+    } else if (bodyB.collisionFilter.category & CollisionCategories.Hangable) {
+      if (bodyA === this.sensors.left || bodyA === this.sensors.right || bodyA === this.sensors.top) {
+        facing = "down";
+        this.isTouching.top = true;
+
+      }
     } else if (bodyA === this.sensors.bottom) {
       this.isTouching.ground = true;
     }

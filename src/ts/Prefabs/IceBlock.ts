@@ -52,8 +52,8 @@ export default class IceBlock extends Phaser.Physics.Matter.Sprite {
   update() {
     if (!this.crumbled && this.lastTouch && this.lastTouch + msBeforeFlash < this.scene.time.now) {
       this.play({ key: "flashing", repeat: 5 });
-      this.setDepth(1);
       this.scene.time.delayedCall(msBeforeCrumble, () => {
+        this.setDepth(1);
         this.play("crumble");
       }, undefined, this);
       this.scene.time.delayedCall(msBeforeFall, () => {

@@ -6,6 +6,7 @@
 import { CollisionCategories } from "../Collisions";
 import Climber from "../Prefabs/Climber";
 import IceBlock from "../Prefabs/IceBlock";
+import Snowflake from "../Prefabs/Snowflake";
 
 export class LevelConfig {
   constructor(public key: string) { }
@@ -16,7 +17,6 @@ export default class Level extends Phaser.Scene {
    * Unique name of the scene.
    */
   public static Name = "Level";
-  animations: Phaser.Animations.Animation[];
   climber: Climber;
   keyA: Phaser.Input.Keyboard.Key;
   keyB: Phaser.Input.Keyboard.Key;
@@ -25,8 +25,9 @@ export default class Level extends Phaser.Scene {
 
   public preload(): void {
     // Preload as needed.
-    this.animations = this.anims.createFromAseprite('climber');
-    this.animations = this.anims.createFromAseprite('iceblock');
+    this.anims.createFromAseprite('climber');
+    this.anims.createFromAseprite('iceblock');
+    this.anims.createFromAseprite('snowflake');
     this.cameras.main.zoom = 2;
   }
 
@@ -81,19 +82,24 @@ export default class Level extends Phaser.Scene {
     }));
 
     const poles = map.getObjectLayer("objects").objects.forEach(obj => {
-      if (obj.type === "pole") {
-        this.matter.add.image(obj.x!, obj.y!, "pole", undefined, <any>{
-          shape: {
-            type: 'circle',
-            radius: 4
-          },
-          isStatic: true,
-          collisionFilter: {
-            category: CollisionCategories.Hangable,
-            group: 0,
-            mask: CollisionCategories.Player
-          }
-        })
+      switch (obj.name) {
+        case "pole":
+          this.matter.add.image(obj.x!, obj.y!, "pole", undefined, <any>{
+            shape: {
+              type: 'circle',
+              radius: 2
+            },
+            isStatic: true,
+            collisionFilter: {
+              category: CollisionCategories.Hangable,
+              group: 0,
+              mask: CollisionCategories.Player
+            }
+          })
+          break;
+        case "snowflake":
+          new Snowflake(this.matter.world, obj.x!, obj.y!);
+          break;
       }
     });
 

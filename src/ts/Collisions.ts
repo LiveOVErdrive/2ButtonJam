@@ -7,6 +7,7 @@ export class CollisionCategories {
   static Solid = 2;
   static Grabbable = 4;
   static Hangable = 8;
+  static Item = 0x40000000;
   static Fatal = 0x80000000;
 }
 

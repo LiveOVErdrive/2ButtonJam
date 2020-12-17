@@ -81,20 +81,44 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":184.090545454545,
-                 "y":493.182181818182
+                 "x":184.091,
+                 "y":493.182
                 }, 
                 {
                  "height":0,
                  "id":3,
-                 "name":"",
+                 "name":"snowflake",
                  "point":true,
                  "rotation":0,
-                 "type":"pole",
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":144,
+                 "y":184.045454545455
+                }, 
+                {
+                 "height":0,
+                 "id":4,
+                 "name":"pole",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
                  "visible":true,
                  "width":0,
                  "x":224,
                  "y":304
+                }, 
+                {
+                 "height":0,
+                 "id":5,
+                 "name":"snowflake",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":224,
+                 "y":448
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -103,7 +127,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":4,
+ "nextobjectid":6,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.4.2",

@@ -150,6 +150,6 @@ window.onload = (): void => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const game = new Game(gameConfig(false));
   // Uncomment the following two lines if you want the game to scale to fill the entire page, but keep the game ratio.
-  resize();
+  //resize();
   window.addEventListener("resize", () => resize, true);
 };

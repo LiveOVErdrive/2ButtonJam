@@ -4,6 +4,7 @@
 
 import { CollisionEvent, CollisionCategories, matterCollision } from "../Collisions";
 
+export const SnowflakeCount = 'snowflakes';
 export default class Snowflake extends Phaser.Physics.Matter.Sprite {
   private collected = false;
 
@@ -40,7 +41,7 @@ export default class Snowflake extends Phaser.Physics.Matter.Sprite {
     this.collected = true;
     this.setToSleep();
     this.play({ key: "Pickup", hideOnComplete: true });
-    this.scene.data.inc('snowflakes')
+    this.scene.data.inc(SnowflakeCount)
   }
 
 }

@@ -29,10 +29,12 @@ export default class Preloader extends Phaser.Scene {
     this.load.image("spikes", "sprites/world/spikes.png");
     this.load.image("pole", "sprites/world/pole_noanim.png");
     this.load.tilemapTiledJSON("level1", "maps/level1.json");
+
+    this.load.bitmapFont("Label", "fonts/kenney_pixel_32.png", "fonts/kenney_pixel_32.xml");
   }
 
   public create(): void {
-    this.scene.start(Level.Name, new LevelConfig("level1"));
+    this.scene.start(Level.Name, new LevelConfig("level1", 0, 0xffffff));
   }
 
   public update(): void {

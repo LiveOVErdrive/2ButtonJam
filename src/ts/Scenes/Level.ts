@@ -6,11 +6,11 @@
 import { CollisionCategories, matterCollision } from "../Collisions";
 import Climber from "../Prefabs/Climber";
 import IceBlock from "../Prefabs/IceBlock";
-import Snowflake from "../Prefabs/Snowflake";
+import Snowflake, { SnowflakeCount } from "../Prefabs/Snowflake";
 import Utilities from "../Utilities";
 
 export class LevelConfig {
-  constructor(public key: string) { }
+  constructor(public key: string, public snowflakes: number, public transitionColor: number) { }
 }
 
 type LevelState = "live" | "dead" | "won";
@@ -30,6 +30,9 @@ export default class Level extends Phaser.Scene {
   doneGraphics: Phaser.GameObjects.Graphics;
   doneTime: number | undefined = undefined;
   startTime: number | undefined = undefined;
+  scoreCamera: Phaser.Cameras.Scene2D.Camera;
+  statusContainer: Phaser.GameObjects.Container;
+  snowFlakeCount: Phaser.GameObjects.BitmapText;
 
   public preload(): void {
     // Preload as needed.
@@ -40,6 +43,9 @@ export default class Level extends Phaser.Scene {
   }
 
   public create(levelConfig: LevelConfig): void {
+    this.startTime = undefined;
+    this.doneTime = undefined;
+    this.state = "live";
     const map = this.make.tilemap({ key: levelConfig.key });
 
     const tiles = [
@@ -120,6 +126,15 @@ export default class Level extends Phaser.Scene {
 
     // Setup finish graphic
     this.doneGraphics = this.add.graphics();
+
+    // Setup status display
+    this.statusContainer = this.add.container(0, 0);
+    this.statusContainer.add(this.add.image(14, 14, "snowflake"));
+
+    this.snowFlakeCount = this.add.bitmapText(30, 1, "Label", "000")
+      .setTint(0xffffff)
+      .setData(SnowflakeCount, levelConfig.snowflakes);
+    this.statusContainer.add(this.snowFlakeCount);
   }
 
   private setupFinish(obj: Phaser.Types.Tilemaps.TiledObject) {
@@ -155,13 +170,25 @@ export default class Level extends Phaser.Scene {
   }
 
   public update() {
+    // Reposition status display
+    this.statusContainer.setPosition(this.cameras.main.worldView.x, this.cameras.main.worldView.y);
+
+    // Update snowflake count
+    const snowflakes = <number>this.data.get(SnowflakeCount);
+    if (this.snowFlakeCount.getData(SnowflakeCount) < snowflakes) {
+      this.snowFlakeCount.incData(SnowflakeCount);
+      this.snowFlakeCount.setText(
+        (<number>this.snowFlakeCount.getData(SnowflakeCount))
+          .toLocaleString(undefined, { minimumIntegerDigits: 3 }))
+    }
+
+    // Update game state
     if (this.state === "live") {
       if (
         !this.cameras.main.getBounds().contains(this.climber.x, this.climber.y) ||
         this.climber.state === "dead"
       ) {
-        this.state = "dead";
-        this.doneTime = this.time.now;
+        this.transitionToDeadState(snowflakes);
       }
     }
 
@@ -178,7 +205,7 @@ export default class Level extends Phaser.Scene {
       this.doneGraphics
         .clear()
         .lineStyle(800, this.state === "won" ? 0xffffff : 0x000000)
-        .arc(position.x, position.y, radius, 0, Math.PI * 2, false, 0.01)
+        .arc(position.x, position.y, radius, 0, Math.PI * 2, false, 0.02)
         .stroke()
     } else if (!this.startTime || this.startTime + 1000 > this.time.now) {
       if (!this.startTime) {
@@ -188,8 +215,8 @@ export default class Level extends Phaser.Scene {
       const position = this.climber.getCenter();
       this.doneGraphics
         .clear()
-        .lineStyle(800, 0xffffff)
-        .arc(position.x, position.y, radius, 0, Math.PI * 2, false, 0.01)
+        .lineStyle(800, (<LevelConfig>this.sys.settings.data).transitionColor)
+        .arc(position.x, position.y, radius, 0, Math.PI * 2, false, 0.02)
         .stroke()
     }
 
@@ -200,6 +227,21 @@ export default class Level extends Phaser.Scene {
 
     this.keyPressedA = false;
     this.keyPressedB = false;
+  }
+
+  private transitionToDeadState(snowflakes: number) {
+    this.state = "dead";
+    this.doneTime = this.time.now;
+    if (snowflakes > 0) {
+      this.data.set(SnowflakeCount, Math.max(0, snowflakes - 5));
+      const settings = <LevelConfig>this.sys.settings.data;
+      settings.transitionColor = 0;
+      this.time.delayedCall(
+        1000,
+        () => this.scene.restart(),
+        undefined,
+        this);
+    }
   }
 
   public destroy() {

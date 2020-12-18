@@ -27,8 +27,6 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     const h = 40;
     const mainBody = world.scene.matter.bodies.rectangle(w / 2, h / 2, 24, 32, {
       chamfer: { radius: 10 },
-      friction: 0.0,
-
       collisionFilter: {
         category: CollisionCategories.Player,
         group: 0,
@@ -51,7 +49,11 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     };
 
     super(world, 0, 0, 'climber', undefined, {
-      parts: [mainBody, sensors.bottom, sensors.top, sensors.left, sensors.right]
+      parts: [mainBody, sensors.bottom, sensors.top, sensors.left, sensors.right],
+      friction: 0,
+      frictionStatic: 0.0,
+      slop: 0.01,
+      restitution: 0
     });
 
     world.scene.add.existing(this);
@@ -259,7 +261,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     }
 
     const direction = Phaser.Math.DegToRad(this.aimingDisplay.getValue());
-    const jumpForce = new Phaser.Math.Vector2().setToPolar(direction, 0.03);
+    const jumpForce = new Phaser.Math.Vector2().setToPolar(direction, 0.02);
     if (jumpForce.y > 0) {
       jumpForce.y *= 1;
     } else {

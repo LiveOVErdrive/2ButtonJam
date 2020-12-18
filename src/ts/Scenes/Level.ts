@@ -3,14 +3,17 @@
  * Portions copyright 2020, Justin Reardon.
 */
 
-import { CollisionCategories } from "../Collisions";
+import { CollisionCategories, matterCollision } from "../Collisions";
 import Climber from "../Prefabs/Climber";
 import IceBlock from "../Prefabs/IceBlock";
 import Snowflake from "../Prefabs/Snowflake";
+import Utilities from "../Utilities";
 
 export class LevelConfig {
   constructor(public key: string) { }
 }
+
+type LevelState = "live" | "dead" | "won";
 
 export default class Level extends Phaser.Scene {
   /**
@@ -22,6 +25,11 @@ export default class Level extends Phaser.Scene {
   keyB: Phaser.Input.Keyboard.Key;
   keyPressedA: boolean;
   keyPressedB: boolean;
+
+  state: LevelState = "live"
+  doneGraphics: Phaser.GameObjects.Graphics;
+  doneTime: number | undefined = undefined;
+  startTime: number | undefined = undefined;
 
   public preload(): void {
     // Preload as needed.
@@ -51,16 +59,13 @@ export default class Level extends Phaser.Scene {
           CollisionCategories.Solid |
           (tile.properties.grabbable ? CollisionCategories.Grabbable : 0) |
           (tile.properties.fatal ? CollisionCategories.Fatal : 0);
-        this.matter.world.convertTiles([tile], <any>{
-          shape: {
-            type: 'rectange',
-          },
-          friction: 0.001,
-          chamfer: 2,
+        this.matter.world.convertTiles([tile], {
+          friction: 0,
+          frictionStatic: 0,
           collisionFilter: {
             category: categories,
             group: 0,
-            mask: CollisionCategories.Player
+            mask: CollisionCategories.Player | CollisionCategories.Solid
           }
         })
       }
@@ -88,6 +93,10 @@ export default class Level extends Phaser.Scene {
         case "snowflake":
           new Snowflake(this.matter.world, obj.x!, obj.y!);
           break;
+        case "finish":
+          const end = this.matter.add.sprite(obj.x!, obj.y!, "endflag");
+          end.setCollisionCategory(CollisionCategories.Solid)
+          end.setCollidesWith(CollisionCategories.Solid);
       }
     });
 
@@ -100,14 +109,90 @@ export default class Level extends Phaser.Scene {
     camera.startFollow(this.climber, true);
     camera.deadzone = new Phaser.Geom.Rectangle(160, 120, 160, 120);
 
+    // Setup finish sensor
+    this.setupFinish(map.findObject("objects", obj => obj.name === "finish"));
+
     // Setup event listeners
     this.keyA = this.input.keyboard.addKey("SPACE");
     this.keyA.on("up", () => this.keyPressedA = true, this);
     this.keyB = this.input.keyboard.addKey("SHIFT");
     this.keyB.on("up", () => this.keyPressedB = true, this);
+
+    // Setup finish graphic
+    this.doneGraphics = this.add.graphics();
+  }
+
+  private setupFinish(obj: Phaser.Types.Tilemaps.TiledObject) {
+    const finishSensor = this.matter.add.rectangle(
+      obj.x!,
+      obj.y!,
+      40,
+      54,
+      {
+        isSensor: true,
+        isStatic: true,
+        collisionFilter: {
+          category: CollisionCategories.Item,
+          group: 0,
+          mask: CollisionCategories.Player
+        }
+      }
+    );
+    matterCollision(this).addOnCollideStart({
+      objectA: this.climber,
+      objectB: finishSensor,
+      callback: this.onFinish,
+      context: this
+    });
+  }
+
+  onFinish() {
+    if (this.state === "live") {
+      this.state = "won";
+      this.doneTime = this.time.now;
+      this.climber.setVelocityY(-3);
+    }
   }
 
   public update() {
+    if (this.state === "live") {
+      if (
+        !this.cameras.main.getBounds().contains(this.climber.x, this.climber.y) ||
+        this.climber.state === "dead"
+      ) {
+        this.state = "dead";
+        this.doneTime = this.time.now;
+      }
+    }
+
+    if (
+      !this.cameras.main.getBounds().contains(this.climber.x, this.climber.y) ||
+      (this.doneTime && this.time.now > this.doneTime + 1000)
+    ) {
+      this.climber.setStatic(true);
+    }
+
+    if (this.doneTime) {
+      const radius = Math.max(400, 1000 - (this.time.now - this.doneTime) * 1);
+      const position = this.climber.getCenter();
+      this.doneGraphics
+        .clear()
+        .lineStyle(800, this.state === "won" ? 0xffffff : 0x000000)
+        .arc(position.x, position.y, radius, 0, Math.PI * 2, false, 0.01)
+        .stroke()
+    } else if (!this.startTime || this.startTime + 1000 > this.time.now) {
+      if (!this.startTime) {
+        this.startTime = this.time.now;
+      }
+      const radius = 200 + this.time.now - this.startTime;
+      const position = this.climber.getCenter();
+      this.doneGraphics
+        .clear()
+        .lineStyle(800, 0xffffff)
+        .arc(position.x, position.y, radius, 0, Math.PI * 2, false, 0.01)
+        .stroke()
+    }
+
     this.climber.updateAction(
       this.keyPressedA ? "pressed" : this.keyA.isDown ? "holding" : undefined,
       this.keyPressedB ? "pressed" : this.keyB.isDown ? "holding" : undefined

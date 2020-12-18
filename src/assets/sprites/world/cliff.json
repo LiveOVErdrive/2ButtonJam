@@ -32,7 +32,7 @@
     "duration": 100
    },
    "4": {
-    "frame": { "x": 1, "y": 20, "w": 18, "h": 18 },
+    "frame": { "x": 77, "y": 1, "w": 18, "h": 18 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
@@ -40,7 +40,7 @@
     "duration": 100
    },
    "5": {
-    "frame": { "x": 20, "y": 20, "w": 18, "h": 18 },
+    "frame": { "x": 1, "y": 20, "w": 18, "h": 18 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
@@ -48,7 +48,7 @@
     "duration": 100
    },
    "6": {
-    "frame": { "x": 39, "y": 20, "w": 18, "h": 18 },
+    "frame": { "x": 20, "y": 20, "w": 18, "h": 18 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
@@ -56,7 +56,7 @@
     "duration": 100
    },
    "7": {
-    "frame": { "x": 58, "y": 20, "w": 18, "h": 18 },
+    "frame": { "x": 39, "y": 20, "w": 18, "h": 18 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
@@ -64,7 +64,7 @@
     "duration": 100
    },
    "8": {
-    "frame": { "x": 1, "y": 39, "w": 18, "h": 18 },
+    "frame": { "x": 58, "y": 20, "w": 18, "h": 18 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
@@ -72,7 +72,7 @@
     "duration": 100
    },
    "9": {
-    "frame": { "x": 20, "y": 39, "w": 18, "h": 18 },
+    "frame": { "x": 77, "y": 20, "w": 18, "h": 18 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
@@ -80,7 +80,7 @@
     "duration": 100
    },
    "10": {
-    "frame": { "x": 39, "y": 39, "w": 18, "h": 18 },
+    "frame": { "x": 1, "y": 39, "w": 18, "h": 18 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
@@ -88,7 +88,7 @@
     "duration": 100
    },
    "11": {
-    "frame": { "x": 58, "y": 39, "w": 18, "h": 18 },
+    "frame": { "x": 20, "y": 39, "w": 18, "h": 18 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
@@ -96,7 +96,39 @@
     "duration": 100
    },
    "12": {
+    "frame": { "x": 39, "y": 39, "w": 18, "h": 18 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 100
+   },
+   "13": {
+    "frame": { "x": 58, "y": 39, "w": 18, "h": 18 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 100
+   },
+   "14": {
+    "frame": { "x": 77, "y": 39, "w": 18, "h": 18 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 100
+   },
+   "15": {
     "frame": { "x": 1, "y": 58, "w": 18, "h": 18 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 100
+   },
+   "16": {
+    "frame": { "x": 20, "y": 58, "w": 18, "h": 18 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
@@ -109,7 +141,7 @@
   "version": "1.2.25-x64",
   "image": "cliff.png",
   "format": "RGBA8888",
-  "size": { "w": 77, "h": 77 },
+  "size": { "w": 96, "h": 77 },
   "scale": "1",
   "frameTags": [
    { "name": "center", "from": 0, "to": 0, "direction": "forward" },
@@ -124,7 +156,11 @@
    { "name": "outerCorner-SW", "from": 9, "to": 9, "direction": "forward" },
    { "name": "outerCorner-SE", "from": 10, "to": 10, "direction": "forward" },
    { "name": "outerCorner-NW", "from": 11, "to": 11, "direction": "forward" },
-   { "name": "outerCorner-NE", "from": 12, "to": 12, "direction": "forward" }
+   { "name": "outerCorner-NE", "from": 12, "to": 12, "direction": "forward" },
+   { "name": "Angle-NW", "from": 13, "to": 13, "direction": "forward" },
+   { "name": "Angle-NE", "from": 14, "to": 14, "direction": "forward" },
+   { "name": "Angle-SW", "from": 15, "to": 15, "direction": "forward" },
+   { "name": "Angle-SE", "from": 16, "to": 16, "direction": "forward" }
   ],
   "layers": [
    { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }

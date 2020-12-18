@@ -707,7 +707,7 @@
                         {
                          "name":"ground",
                          "type":"bool",
-                         "value":false
+                         "value":true
                         }]
                 }, 
                 {
@@ -726,7 +726,7 @@
                         {
                          "name":"ground",
                          "type":"bool",
-                         "value":false
+                         "value":true
                         }]
                 }, 
                 {

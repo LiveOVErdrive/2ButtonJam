@@ -137,7 +137,7 @@
    <properties>
     <property name="collides" type="bool" value="true"/>
     <property name="grabbable" type="bool" value="false"/>
-    <property name="ground" type="bool" value="false"/>
+    <property name="ground" type="bool" value="true"/>
    </properties>
    <objectgroup draworder="index" id="2">
     <object id="1" x="16" y="16">
@@ -149,7 +149,7 @@
    <properties>
     <property name="collides" type="bool" value="true"/>
     <property name="grabbable" type="bool" value="false"/>
-    <property name="ground" type="bool" value="false"/>
+    <property name="ground" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="15">

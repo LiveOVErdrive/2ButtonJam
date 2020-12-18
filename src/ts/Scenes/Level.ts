@@ -46,65 +46,7 @@ export default class Level extends Phaser.Scene {
     this.startTime = undefined;
     this.doneTime = undefined;
     this.state = "live";
-    const map = this.make.tilemap({ key: levelConfig.key });
-
-    const tiles = [
-      map.addTilesetImage("cliffs", "cliffs"),
-      map.addTilesetImage("spikes", "spikes"),
-    ];
-
-    map.createLayer("background", tiles, 0, 0).setAlpha(0.7);
-
-    const cliffsLayer = map.createLayer("cliffs", tiles, 0, 0)
-      .setCollisionByProperty({ collides: true });
-    cliffsLayer.getTilesWithin().filter(x => x.collides).forEach(tile => {
-      if (tile.properties.iceblock) {
-        new IceBlock(this.matter.world, 8 + tile.x * 16, 8 + tile.y * 16);
-      } else {
-        const categories =
-          CollisionCategories.Solid |
-          (tile.properties.grabbable ? CollisionCategories.Grabbable : 0) |
-          (tile.properties.fatal ? CollisionCategories.Fatal : 0);
-        this.matter.world.convertTiles([tile], {
-          friction: 0,
-          frictionStatic: 0,
-          collisionFilter: {
-            category: categories,
-            group: 0,
-            mask: CollisionCategories.Player | CollisionCategories.Solid
-          }
-        })
-      }
-
-
-    });
-
-    const poles = map.getObjectLayer("objects").objects.forEach(obj => {
-      switch (obj.name) {
-        case "pole":
-          this.matter.add.image(obj.x!, obj.y!, "pole", undefined, <any>{
-            shape: {
-              type: 'circle',
-              radius: 2
-            },
-            isStatic: true,
-            isSensor: true,
-            collisionFilter: {
-              category: CollisionCategories.Hangable,
-              group: 0,
-              mask: CollisionCategories.Player
-            }
-          })
-          break;
-        case "snowflake":
-          new Snowflake(this.matter.world, obj.x!, obj.y!);
-          break;
-        case "finish":
-          const end = this.matter.add.sprite(obj.x!, obj.y!, "endflag");
-          end.setCollisionCategory(CollisionCategories.Solid)
-          end.setCollidesWith(CollisionCategories.Solid);
-      }
-    });
+    const map = this.loadMap(levelConfig);
 
     const camera = this.cameras.main;
     camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -135,6 +77,67 @@ export default class Level extends Phaser.Scene {
       .setTint(0xffffff)
       .setData(SnowflakeCount, levelConfig.snowflakes);
     this.statusContainer.add(this.snowFlakeCount);
+  }
+
+  private loadMap(levelConfig: LevelConfig) {
+    const map = this.make.tilemap({ key: levelConfig.key });
+
+    const tiles = [
+      map.addTilesetImage("cliffs", "cliffs"),
+      map.addTilesetImage("spikes", "spikes"),
+    ];
+
+    map.createLayer("background", tiles, 0, 0).setAlpha(0.7);
+
+    const cliffsLayer = map.createLayer("cliffs", tiles, 0, 0)
+      .setCollisionByProperty({ collides: true });
+    cliffsLayer.getTilesWithin().filter(x => x.collides).forEach(tile => {
+      if (tile.properties.iceblock) {
+        new IceBlock(this.matter.world, 8 + tile.x * 16, 8 + tile.y * 16);
+      } else {
+        const categories = CollisionCategories.Solid |
+          (tile.properties.grabbable ? CollisionCategories.Grabbable : 0) |
+          (tile.properties.ground ? CollisionCategories.Ground : 0) |
+          (tile.properties.fatal ? CollisionCategories.Fatal : 0);
+        this.matter.world.convertTiles([tile], {
+          friction: 0,
+          frictionStatic: 0,
+          collisionFilter: {
+            category: categories,
+            group: 0,
+            mask: CollisionCategories.Player | CollisionCategories.Solid
+          }
+        });
+      }
+    });
+
+    const poles = map.getObjectLayer("objects").objects.forEach(obj => {
+      switch (obj.name) {
+        case "pole":
+          this.matter.add.image(obj.x!, obj.y!, "pole", undefined, <any>{
+            shape: {
+              type: 'circle',
+              radius: 2
+            },
+            isStatic: true,
+            isSensor: true,
+            collisionFilter: {
+              category: CollisionCategories.Hangable,
+              group: 0,
+              mask: CollisionCategories.Player
+            }
+          });
+          break;
+        case "snowflake":
+          new Snowflake(this.matter.world, obj.x!, obj.y!);
+          break;
+        case "finish":
+          const end = this.matter.add.sprite(obj.x!, obj.y!, "endflag");
+          end.setCollisionCategory(CollisionCategories.Solid);
+          end.setCollidesWith(CollisionCategories.Solid);
+      }
+    });
+    return map;
   }
 
   private setupFinish(obj: Phaser.Types.Tilemaps.TiledObject) {

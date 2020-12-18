@@ -4,10 +4,9 @@
 
 import { BodyType } from "matter";
 import { CollisionEvent, CollisionCategories, matterCollision } from "../Collisions";
-import Utilities from "../Utilities";
 
-type Facing = "left" | "right" | "down";
-type State = "clinging" | "hanging" | "prepping" | "jumping" | "climbing" | "dead";
+type Facing = "left" | "right" | "down" | "up";
+type State = "clinging" | "hanging" | "standing" | "prepping" | "jumping" | "climbing" | "dead";
 type KeyState = "pressed" | "holding" | undefined;
 
 export default class Climber extends Phaser.Physics.Matter.Sprite {
@@ -97,6 +96,8 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
       this.setFacing("right");
     } else if (!this.isTouching.left && this.isTouching.right && !this.isTouching.ground) {
       this.setFacing("left");
+    } else if (this.isTouching.ground) {
+      this.setFacing("up");
     }
 
     switch (this.state) {
@@ -116,15 +117,27 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
           this.enterStateFalling();
         }
         break;
+      case "standing":
+        if (transitionToPreppingKeys(keyA, keyB)) {
+          this.enterStatePrepping();
+        } else if (!this.isTouching.ground) {
+          this.enterStateFalling();
+        }
+        break;
       case "prepping":
         if (!keyA) {
           this.enterStateJumping();
-        } else if (!this.isTouching.left && !this.isTouching.right && !this.isTouching.top) {
+        } else if (
+          !this.isTouching.left &&
+          !this.isTouching.right &&
+          !this.isTouching.top &&
+          !this.isTouching.ground
+        ) {
           this.enterStateFalling();
         }
         break;
       case "jumping":
-        this.enterStateClingingOrHanging();
+        this.tryFinishJump();
     }
 
     // Handle leaving the prepping state.
@@ -134,11 +147,13 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     }
   }
 
-  private enterStateClingingOrHanging() {
+  private tryFinishJump() {
     if (this.isTouching.top) {
       this.enterStateHanging(true);
-    } else if (this.isTouching.left || this.isTouching.right) {
+    } else if ((this.isTouching.left || this.isTouching.right) && !this.isTouching.ground) {
       this.enterStateClinging(true);
+    } else if (this.isTouching.ground) {
+      this.enterStateStanding();
     }
   }
 
@@ -158,6 +173,11 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     if (updateConstraint) {
       this.replaceHangingConstraint(this.touchingAt);
     }
+  }
+
+  private enterStateStanding() {
+    this.state = "standing";
+    this.play({ key: 'Slide', repeat: -1, repeatDelay: 2000 });
   }
 
   private enterStateClimbing(position: Phaser.Math.Vector2) {
@@ -201,7 +221,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
 
   private enterStatePrepping(): void {
 
-    if (this.state !== "hanging") {
+    if (this.state === "clinging") {
       this.play('preppingJump');
     }
 
@@ -226,6 +246,10 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
         stop = -90 + 15;
         length = 330;
         break;
+      case "up":
+        start = 180 + 15;
+        stop = 360 - 15;
+        length = 150;
     }
 
     const animation = this.scene.tweens.addCounter({
@@ -351,6 +375,11 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
         this.displayOriginX = 18;
         this.displayOriginY = 18;
         break;
+      case "up":
+        this.flipX = true;
+        this.displayOriginX = 18;
+        this.displayOriginY = 23;
+        break;
     }
   }
 
@@ -368,8 +397,8 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     let facing: Facing | undefined;
     if (
       // Don't touch anything immediately after jumping.
-      this.scene.time.now - 50 < this.lastJump ||
-      !(bodyB.collisionFilter.category & (CollisionCategories.Grabbable | CollisionCategories.Hangable))
+      this.scene.time.now - 100 < this.lastJump ||
+      !(bodyB.collisionFilter.category & (CollisionCategories.Grabbable | CollisionCategories.Hangable | CollisionCategories.Ground))
     ) {
       return; // We only care about collisions with physical objects
     }
@@ -388,8 +417,11 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
         this.isTouching.top = true;
 
       }
-    } else if (bodyA === this.sensors.bottom) {
+    }
+
+    if (!facing && bodyA === this.sensors.bottom && (bodyB.collisionFilter.category & CollisionCategories.Ground)) {
       this.isTouching.ground = true;
+      facing = "up";
     }
 
     if (facing) {

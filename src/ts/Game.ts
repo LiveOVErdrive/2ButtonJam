@@ -9,8 +9,8 @@ import Preloader from "./Scenes/Preloader";
 import MainMenu from "./Scenes/MainMenu";
 import SplashScreen from "./Scenes/SplashScreen";
 import Level from "./Scenes/Level";
-import MainSettings from "./Scenes/MainSettings";
 import PhaserMatterCollisionPlugin from "phaser-matter-collision-plugin";
+import GameOver from './Scenes/GameOver';
 
 const gameWidth = 640;
 const gameHeight = 480;
@@ -118,7 +118,7 @@ export default class Game extends Phaser.Game {
     this.scene.add(SplashScreen.Name, SplashScreen);
     this.scene.add(MainMenu.Name, MainMenu);
     this.scene.add(Level.Name, Level);
-    this.scene.add(MainSettings.Name, MainSettings);
+    this.scene.add(GameOver.Name, GameOver);
     this.scene.start(Boot.Name);
   }
 }

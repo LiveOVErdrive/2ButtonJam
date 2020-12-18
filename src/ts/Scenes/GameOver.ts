@@ -3,41 +3,41 @@
  * Portions copyright 2020, Justin Reardon.
 */
 
-import Level, { LevelConfig } from "./Level";
+import MainMenu from "./MainMenu";
 
-export default class MainMenu extends Phaser.Scene {
+export default class GameOver extends Phaser.Scene {
   /**
    * Unique name of the scene.
    */
-  public static Name = "MainMenu";
+  public static Name = "GameOver";
 
   transitionRadius = 1000;
   transitionGraphics: Phaser.GameObjects.Graphics;
+  transitionColour = 0x000000;
 
   public preload(): void {
     // Preload as needed.
   }
 
   public create(): void {
-    this.add.image(0, 0, "titleBackground").setOrigin(0, 0);
+    this.add.image(0, 0, "gameOverBackground").setOrigin(0, 0);
     const textYPosition = this.cameras.main.height;
 
-    const newGameText = this.createShadowedText(textYPosition * 0.75, 48, "Press Space to Start");
+    const newGameText = this.createShadowedText(textYPosition * 0.8, 32, "Press Space to continue");
     newGameText.setInteractive();
-    newGameText.on("pointerdown", this.startLevel1, this);
-    this.input.keyboard.once("keyup-SPACE", this.startLevel1, this);
-
-    this.createShadowedText(textYPosition * 0.9, 32, "Jump: Hold and release Space\nClimb: Shift");
+    newGameText.on("pointerdown", this.openMainMenu, this);
+    this.input.keyboard.once("keyup-SPACE", this.openMainMenu, this);
 
     this.transitionGraphics = this.add.graphics();
     this.tweens.add({
       targets: this,
       transitionRadius: { from: 1000, to: 1 },
-      duration: 500
+      duration: 1000
     });
   }
 
-  private startLevel1() {
+  private openMainMenu() {
+    this.transitionColour = 0xffffff;
     this.tweens.add({
       targets: this,
       transitionRadius: { from: 1, to: 1000 },
@@ -45,9 +45,10 @@ export default class MainMenu extends Phaser.Scene {
     });
     this.time.delayedCall(
       500,
-      () => this.scene.start(Level.Name, new LevelConfig("level1", 0, 0xffffff)),
+      () => this.scene.start(MainMenu.Name),
       undefined,
       this);
+    ;
   }
 
   private createShadowedText(textYPosition: number, fontSize: number, text: string) {
@@ -64,7 +65,7 @@ export default class MainMenu extends Phaser.Scene {
   public update(): void {
     this.transitionGraphics
       .clear()
-      .lineStyle(this.transitionRadius, 0xffffff)
+      .lineStyle(this.transitionRadius, this.transitionColour)
       .arc(this.cameras.main.width / 2, this.cameras.main.height / 2, 400, 0, Math.PI * 2, false, 0.02)
       .stroke()
   }

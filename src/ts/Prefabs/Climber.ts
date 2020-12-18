@@ -125,7 +125,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
         }
         break;
       case "prepping":
-        if (!keyA) {
+        if (keyA === "pressed") {
           this.enterStateJumping();
         } else if (
           !this.isTouching.left &&
@@ -183,7 +183,6 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
   private enterStateClimbing(position: Phaser.Math.Vector2) {
     const climbFrom = new Phaser.Math.Vector2(position.x, position.y - 24);
 
-
     this.state = "climbing";
     this.play("climb").playAfterRepeat("Idle");
     this.scene.time.delayedCall(
@@ -208,13 +207,17 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
         this.scene.time.delayedCall(
           150,
           () => {
-            if (this.state !== "climbing") {
-              return;
+            if (this.state === "climbing") {
+              this.replaceHangingConstraint(climbFrom);
             }
-            this.replaceHangingConstraint(climbFrom);
-            this.enterStateClinging(false);
-          }
-        )
+          });
+        this.scene.time.delayedCall(
+          200,
+          () => {
+            if (this.state === "climbing") {
+              this.enterStateClinging(false);
+            }
+          });
       }
     )
   }
@@ -232,7 +235,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     let length;
     switch (this.facing) {
       case "left":
-        start = 90 - 15;
+        start = 90 + 15;
         stop = 270 - 15;
         length = 150;
         break;
@@ -257,6 +260,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
       to: stop,
       duration: length * 5,
       hold: 100,
+      repeatDelay: 100,
       yoyo: true,
       repeat: -1,
       onUpdate: (tween: Phaser.Tweens.Tween) => {
@@ -466,8 +470,8 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
   }
 }
 
-function transitionToPreppingKeys(keyA: string | undefined, keyB: string | undefined) {
-  return keyA === "holding" && !keyB;
+function transitionToPreppingKeys(keyA: KeyState, keyB: KeyState) {
+  return keyA === "pressed" && !keyB;
 }
 
 function steppedRange(start: number, stop: number, step: number) {

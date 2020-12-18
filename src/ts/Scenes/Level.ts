@@ -8,6 +8,7 @@ import Climber from "../Prefabs/Climber";
 import IceBlock from "../Prefabs/IceBlock";
 import Snowflake, { SnowflakeCount } from "../Prefabs/Snowflake";
 import Utilities from "../Utilities";
+import GameOver from "./GameOver";
 
 export class LevelConfig {
   constructor(public key: string, public snowflakes: number, public transitionColor: number) { }
@@ -66,12 +67,12 @@ export default class Level extends Phaser.Scene {
     this.keyB = this.input.keyboard.addKey("SHIFT");
     this.keyB.on("up", () => this.keyPressedB = true, this);
 
-    // Setup finish graphic
-    this.doneGraphics = this.add.graphics();
-
     // Setup status display
     this.statusContainer = this.add.container(0, 0);
     this.statusContainer.add(this.add.image(14, 14, "snowflake"));
+
+    // Setup finish graphic
+    this.doneGraphics = this.add.graphics();
 
     this.snowFlakeCount = this.add.bitmapText(30, 1, "Label", "000")
       .setTint(0xffffff)
@@ -242,6 +243,14 @@ export default class Level extends Phaser.Scene {
       this.time.delayedCall(
         1000,
         () => this.scene.restart(),
+        undefined,
+        this);
+    } else {
+      this.time.delayedCall(
+        1000,
+        () => {
+          this.scene.start(GameOver.Name);
+        },
         undefined,
         this);
     }

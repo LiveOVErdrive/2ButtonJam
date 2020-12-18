@@ -18,11 +18,15 @@ export default class Preloader extends Phaser.Scene {
 
     this.load.path = "assets/";
 
+    this.load.aseprite('aim', 'sprites/icons/aim.png', 'sprites/icons/aim.json');
     this.load.aseprite('climber', 'sprites/player/climber.png', 'sprites/player/climber.json');
     this.load.aseprite('iceblock', 'sprites/world/iceblock.png', 'sprites/world/iceblock.json');
+    this.load.aseprite('snowflake', 'sprites/items/snowflake.png', 'sprites/items/snowflake.json');
 
     this.load.image("cliffs", "sprites/world/cliff.png");
     this.load.image("iceblock", "sprites/world/iceblock.png");
+    this.load.image("spikes", "sprites/world/spikes.png");
+    this.load.image("pole", "sprites/world/pole_noanim.png");
     this.load.tilemapTiledJSON("level1", "maps/level1.json");
   }
 

@@ -12,13 +12,13 @@ import Level from "./Scenes/Level";
 import MainSettings from "./Scenes/MainSettings";
 import PhaserMatterCollisionPlugin from "phaser-matter-collision-plugin";
 
-const gameWidth = 800;
-const gameHeight = 800;
+const gameWidth = 640;
+const gameHeight = 480;
 
 function gameConfig(debug: boolean): Phaser.Types.Core.GameConfig {
   return {
-    width: 800,
-    height: 600,
+    width: gameWidth,
+    height: 480,
     type: Phaser.AUTO,
     parent: "content",
     title: "Starter Project for Phaser 3 with Visual Studio Code, TypeScript, and NodeJS",
@@ -150,6 +150,6 @@ window.onload = (): void => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const game = new Game(gameConfig(false));
   // Uncomment the following two lines if you want the game to scale to fill the entire page, but keep the game ratio.
-  // resize();
+  resize();
   window.addEventListener("resize", () => resize, true);
 };

@@ -77,6 +77,7 @@ export default class Level extends Phaser.Scene {
               radius: 2
             },
             isStatic: true,
+            isSensor: true,
             collisionFilter: {
               category: CollisionCategories.Hangable,
               group: 0,

@@ -19,7 +19,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
   hangingConstraint: MatterJS.ConstraintType | undefined;
   touchingAt: Phaser.Math.Vector2 | undefined;
   aimer: Phaser.GameObjects.Image;
-  aimingDisplay: [number[], Phaser.Tweens.Tween] | undefined;
+  aimingDisplay: Phaser.Tweens.Tween | undefined;
   lastJump: number;
 
   constructor(world: Phaser.Physics.Matter.World, x: number, y: number) {
@@ -127,7 +127,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
 
     // Handle leaving the prepping state.
     if (this.state !== "prepping" && this.aimingDisplay) {
-      this.aimingDisplay[1].stop();
+      this.aimingDisplay.stop();
       this.aimingDisplay = undefined;
     }
   }
@@ -205,22 +205,31 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
 
     this.state = "prepping";
 
-    let aimDirections: number[];
+    let start;
+    let stop;
+    let length;
     switch (this.facing) {
       case "left":
-        aimDirections = steppedRange(90, 270, 15);
+        start = 90 - 15;
+        stop = 270 - 15;
+        length = 150;
         break;
       case "right":
-        aimDirections = steppedRange(90, -90, -15);
+        start = 90 - 15;
+        stop = -90 + 15;
+        length = 150;
         break;
       case "down":
-        aimDirections = steppedRange(270, -90, -15);
+        start = 270 - 15;
+        stop = -90 + 15;
+        length = 330;
+        break;
     }
 
     const animation = this.scene.tweens.addCounter({
-      from: 0,
-      to: aimDirections.length - 1,
-      duration: aimDirections.length * 60,
+      from: start,
+      to: stop,
+      duration: length * 5,
       hold: 100,
       yoyo: true,
       repeat: -1,
@@ -229,7 +238,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
           return;
         }
 
-        const angle = Phaser.Math.DegToRad(this.aimingDisplay[0][Math.floor(tween.getValue())]);
+        const angle = Phaser.Math.DegToRad(tween.getValue());
         const position = new Phaser.Math.Vector2().setToPolar(angle, 50);
         this.aimer.setAlpha(1);
         this.aimer.setPosition(Math.round(position.x + this.touchingAt.x), Math.round(position.y + this.touchingAt.y));
@@ -237,7 +246,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
       onUpdateScope: this
     })
 
-    this.aimingDisplay = [aimDirections, animation];
+    this.aimingDisplay = animation;
   }
 
   enterStateJumping() {
@@ -249,7 +258,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
       throw new Error("aimingDisplay should not be null when jumping");
     }
 
-    const direction = Phaser.Math.DegToRad(this.aimingDisplay[0][Math.floor(this.aimingDisplay[1].getValue())]);
+    const direction = Phaser.Math.DegToRad(this.aimingDisplay.getValue());
     const jumpForce = new Phaser.Math.Vector2().setToPolar(direction, 0.03);
     if (jumpForce.y > 0) {
       jumpForce.y *= 1;
@@ -332,7 +341,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
         break;
       case "right":
         this.flipX = true;
-        this.displayOriginX = 11;
+        this.displayOriginX = 13;
         this.displayOriginY = 22;
         break;
       case "down":

@@ -28,7 +28,7 @@ export default class Level extends Phaser.Scene {
     this.anims.createFromAseprite('climber');
     this.anims.createFromAseprite('iceblock');
     this.anims.createFromAseprite('snowflake');
-    this.cameras.main.zoom = 2;
+    this.cameras.main.zoom = 1;
   }
 
   public create(levelConfig: LevelConfig): void {
@@ -98,7 +98,7 @@ export default class Level extends Phaser.Scene {
     this.climber = new Climber(this.matter.world, x!, y!);
     this.climber.setFacing("right");
     camera.startFollow(this.climber, true);
-    camera.deadzone = new Phaser.Geom.Rectangle(100, 100, 200, 100);
+    camera.deadzone = new Phaser.Geom.Rectangle(160, 120, 160, 120);
 
     // Setup event listeners
     this.keyA = this.input.keyboard.addKey("SPACE");

@@ -21,6 +21,22 @@ export default class MainMenu extends Phaser.Scene {
   public create(): void {
     this.add.image(0, 0, "titleBackground").setOrigin(0, 0);
     const textYPosition = this.cameras.main.height;
+    const snowEmitter = this.add.particles('snowflake').createEmitter({
+      x: 0,
+      y: 0,
+      blendMode: 'SCREEN',
+      speed: { min: 10, max: 50 },
+      gravityY: 15,
+      quantity: 1,
+      lifespan: 20000,
+      frequency: 1000
+    });
+    snowEmitter.setEmitZone({
+      source: new Phaser.Geom.Line(0, -10, 640, -10),
+      type: 'edge',
+      quantity: 10,
+
+    });
 
     const newGameText = this.createShadowedText(textYPosition * 0.75, 48, "Press Space to Start");
     this.input.keyboard.once("keyup-SPACE", this.startLevel1, this);

@@ -45,7 +45,7 @@ export default class Preloader extends Phaser.Scene {
 
   public create(): void {
     this.scene.run(BackgroundAudio.Name);
-    this.scene.start(MainMenu.Name, new LevelConfig(this.time.now, 1, 0, 0xffffff));
+    this.scene.start(MainMenu.Name);
   }
 
   public update(): void {

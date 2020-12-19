@@ -3,6 +3,7 @@
  * Portions copyright 2020, Justin Reardon.
 */
 
+import { Levels } from "../Game";
 import BackgroundAudio from "./BackgroundAudio";
 import Level, { LevelConfig } from "./Level";
 
@@ -64,8 +65,8 @@ export default class MainMenu extends Phaser.Scene {
       duration: 500
     });
     this.time.delayedCall(
-      500,
-      () => this.scene.start(Level.Name, new LevelConfig(this.time.now, 1, 0, 0xffffff)),
+      550,
+      () => this.scene.start(Level.Name, new LevelConfig(this.time.now, Levels, 0, 0xffffff)),
       undefined,
       this);
   }

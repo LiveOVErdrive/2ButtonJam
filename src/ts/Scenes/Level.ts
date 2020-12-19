@@ -116,6 +116,7 @@ export default class Level extends Phaser.Scene {
           (tile.properties.fatal ? CollisionCategories.Fatal : 0);
         this.matter.world.convertTiles([tile], {
           friction: 0,
+          chamfer: { radius: 2 },
           frictionStatic: 0,
           collisionFilter: {
             category: categories,

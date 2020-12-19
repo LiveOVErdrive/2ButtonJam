@@ -3,13 +3,13 @@
  * Portions copyright 2020, Justin Reardon.
 */
 
-import Level, { LevelConfig } from "./Level";
+import MainMenu from "./MainMenu";
 
-export default class MainMenu extends Phaser.Scene {
+export default class Victory extends Phaser.Scene {
   /**
    * Unique name of the scene.
    */
-  public static Name = "MainMenu";
+  public static Name = "Victory";
 
   transitionRadius = 1000;
   transitionGraphics: Phaser.GameObjects.Graphics;
@@ -19,23 +19,22 @@ export default class MainMenu extends Phaser.Scene {
   }
 
   public create(): void {
-    this.add.image(0, 0, "titleBackground").setOrigin(0, 0);
+    this.add.image(0, 0, "victoryBackground").setOrigin(0, 0);
     const textYPosition = this.cameras.main.height;
 
-    const newGameText = this.createShadowedText(textYPosition * 0.75, 48, "Press Space to Start");
-    this.input.keyboard.once("keyup-SPACE", this.startLevel1, this);
-
-    this.createShadowedText(textYPosition * 0.9, 32, "Jump: Hold and release Space\nClimb: Shift");
+    const newGameText = this.createShadowedText(textYPosition * 0.8, 32, "Press Space to continue");
+    newGameText.on("pointerdown", this.openMainMenu, this);
+    this.input.keyboard.once("keyup-SPACE", this.openMainMenu, this);
 
     this.transitionGraphics = this.add.graphics();
     this.tweens.add({
       targets: this,
       transitionRadius: { from: 1000, to: 1 },
-      duration: 500
+      duration: 1000
     });
   }
 
-  private startLevel1() {
+  private openMainMenu() {
     this.tweens.add({
       targets: this,
       transitionRadius: { from: 1, to: 1000 },
@@ -43,9 +42,10 @@ export default class MainMenu extends Phaser.Scene {
     });
     this.time.delayedCall(
       500,
-      () => this.scene.start(Level.Name, new LevelConfig(1, 0, 0xffffff)),
+      () => this.scene.start(MainMenu.Name),
       undefined,
       this);
+    ;
   }
 
   private createShadowedText(textYPosition: number, fontSize: number, text: string) {

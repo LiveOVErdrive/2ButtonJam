@@ -4,14 +4,16 @@
 */
 
 import { CollisionCategories, matterCollision } from "../Collisions";
+import { Levels } from "../Game";
 import Climber from "../Prefabs/Climber";
 import IceBlock from "../Prefabs/IceBlock";
 import Snowflake, { SnowflakeCount } from "../Prefabs/Snowflake";
 import Utilities from "../Utilities";
 import GameOver from "./GameOver";
+import Victory from "./Victory";
 
 export class LevelConfig {
-  constructor(public key: string, public snowflakes: number, public transitionColor: number) { }
+  constructor(public levelNumber: number, public snowflakes: number, public transitionColor: number) { }
 }
 
 type LevelState = "live" | "dead" | "won";
@@ -81,7 +83,7 @@ export default class Level extends Phaser.Scene {
   }
 
   private loadMap(levelConfig: LevelConfig) {
-    const map = this.make.tilemap({ key: levelConfig.key });
+    const map = this.make.tilemap({ key: `level${levelConfig.levelNumber}` });
 
     const tiles = [
       map.addTilesetImage("cliffs", "cliffs"),
@@ -170,6 +172,24 @@ export default class Level extends Phaser.Scene {
       this.state = "won";
       this.doneTime = this.time.now;
       this.climber.setVelocityY(-3);
+
+      const settings = <LevelConfig>this.sys.settings.data;
+      settings.levelNumber++;
+
+      if (settings.levelNumber > Levels) {
+        this.time.delayedCall(
+          1000,
+          () => this.scene.start(Victory.Name),
+          undefined,
+          this);
+
+      } else {
+        this.time.delayedCall(
+          1000,
+          () => this.scene.restart(settings),
+          undefined,
+          this);
+      }
     }
   }
 

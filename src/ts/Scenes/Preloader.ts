@@ -7,6 +7,7 @@ import SplashScreen from "./SplashScreen";
 import Utilities from "../Utilities";
 import Level, { LevelConfig } from "./Level";
 import MainMenu from "./MainMenu";
+import { Levels } from "../Game";
 
 export default class Preloader extends Phaser.Scene {
   /**
@@ -27,18 +28,22 @@ export default class Preloader extends Phaser.Scene {
 
     this.load.image("titleBackground", "sprites/screens/titleFull.png");
     this.load.image("gameOverBackground", "sprites/screens/gameOver.png");
+    this.load.image("victoryBackground", "sprites/screens/gameOver.png");
 
     this.load.image("cliffs", "sprites/world/cliff.png");
     this.load.image("iceblock", "sprites/world/iceblock.png");
     this.load.image("spikes", "sprites/world/spikes.png");
     this.load.image("pole", "sprites/world/pole_noanim.png");
-    this.load.tilemapTiledJSON("level1", "maps/level1.json");
+
+    for (let i = 1; i <= Levels; i++) {
+      this.load.tilemapTiledJSON(`level${i}`, `maps/level${i}.json`);
+    }
 
     this.load.bitmapFont("Label", "fonts/kenney_pixel_32.png", "fonts/kenney_pixel_32.xml");
   }
 
   public create(): void {
-    this.scene.start(MainMenu.Name, new LevelConfig("level1", 0, 0xffffff));
+    this.scene.start(MainMenu.Name, new LevelConfig(1, 0, 0xffffff));
   }
 
   public update(): void {

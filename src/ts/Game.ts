@@ -11,6 +11,7 @@ import SplashScreen from "./Scenes/SplashScreen";
 import Level from "./Scenes/Level";
 import PhaserMatterCollisionPlugin from "phaser-matter-collision-plugin";
 import GameOver from './Scenes/GameOver';
+import Victory from './Scenes/Victory';
 
 const gameWidth = 640;
 const gameHeight = 480;
@@ -108,6 +109,8 @@ function gameConfig(debug: boolean): Phaser.Types.Core.GameConfig {
   };
 }
 
+export const Levels = 1;
+
 export default class Game extends Phaser.Game {
   constructor(config: Phaser.Types.Core.GameConfig) {
 
@@ -119,6 +122,7 @@ export default class Game extends Phaser.Game {
     this.scene.add(MainMenu.Name, MainMenu);
     this.scene.add(Level.Name, Level);
     this.scene.add(GameOver.Name, GameOver);
+    this.scene.add(Victory.Name, Victory);
     this.scene.start(Boot.Name);
   }
 }

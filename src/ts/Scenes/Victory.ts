@@ -15,11 +15,11 @@ export default class Victory extends Phaser.Scene {
   transitionGraphics: Phaser.GameObjects.Graphics;
 
   public preload(): void {
-    // Preload as needed.
+    this.anims.createFromAseprite('victory');
   }
 
   public create(config: { runTime: number }): void {
-    this.add.image(0, 0, "victoryBackground").setOrigin(0, 0);
+    this.add.sprite(0, 0, "victory").setOrigin(0, 0).play("full");
     const textYPosition = this.cameras.main.height;
 
     this.createShadowedText(

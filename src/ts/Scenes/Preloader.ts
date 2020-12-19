@@ -27,7 +27,7 @@ export default class Preloader extends Phaser.Scene {
 
     this.load.image("titleBackground", "sprites/screens/titleFull.png");
     this.load.image("gameOverBackground", "sprites/screens/gameOver.png");
-    this.load.image("victoryBackground", "sprites/screens/gameOver.png");
+    this.load.aseprite('victory', 'sprites/screens/victory.png', 'sprites/screens/victory.json');
 
     this.load.image("cliffs", "sprites/world/cliff.png");
     this.load.image("iceblock", "sprites/world/iceblock.png");

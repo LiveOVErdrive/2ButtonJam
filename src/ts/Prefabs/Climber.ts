@@ -258,7 +258,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     const animation = this.scene.tweens.addCounter({
       from: start,
       to: stop,
-      duration: length * 5,
+      duration: length * 6,
       hold: 100,
       repeatDelay: 100,
       yoyo: true,
@@ -269,7 +269,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
         }
 
         const angle = Phaser.Math.DegToRad(tween.getValue());
-        const position = new Phaser.Math.Vector2().setToPolar(angle, 50);
+        const position = new Phaser.Math.Vector2().setToPolar(angle, 100);
         this.aimer.setAlpha(1);
         this.aimer.setPosition(Math.round(position.x + this.touchingAt.x), Math.round(position.y + this.touchingAt.y));
       },
@@ -291,9 +291,10 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     const direction = Phaser.Math.DegToRad(this.aimingDisplay.getValue());
     const jumpForce = new Phaser.Math.Vector2().setToPolar(direction, 0.02);
     if (jumpForce.y > 0) {
-      jumpForce.y *= 1;
+      jumpForce.y = 0;
     } else {
-      jumpForce.y = jumpForce.y + -0.01;
+      jumpForce.y += -0.01;
+
     }
     this.applyForce(jumpForce);
     this.lastJump = this.scene.time.now;
@@ -305,6 +306,9 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
   }
 
   enterStateFalling() {
+    if (this.state === "prepping") {
+      this.aimer.setAlpha(0);
+    }
     this.state = "jumping";
     this.play('Jump');
     this.replaceHangingConstraint();
@@ -346,7 +350,6 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
           break;
       }
 
-
       this.hangingConstraint = position ?
         this.scene.matter.add.worldConstraint(<BodyType>this.body, 1, elasticity, {
           pointA: new Phaser.Math.Vector2(Math.round(position.x), Math.round(position.y)),
@@ -357,8 +360,6 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     } else {
       this.hangingConstraint = undefined;
     }
-
-
   }
 
   setFacing(facing: Facing) {
@@ -377,7 +378,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
       case "down":
         this.flipX = true;
         this.displayOriginX = 18;
-        this.displayOriginY = 18;
+        this.displayOriginY = 14;
         break;
       case "up":
         this.flipX = true;
@@ -416,7 +417,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
         facing = "left";
       }
     } else if (bodyB.collisionFilter.category & CollisionCategories.Hangable) {
-      if (bodyA === this.sensors.left || bodyA === this.sensors.right || bodyA === this.sensors.top) {
+      if (bodyA === this.sensors.left || bodyA === this.sensors.right || bodyA === this.sensors.top || bodyA === this.sensors.bottom) {
         facing = "down";
         this.isTouching.top = true;
 
@@ -436,7 +437,12 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     if (touchPoint) {
       // Phaser seems to have the wrong type definition for these. Need to access vertex.
       this.touchingAt = new Phaser.Math.Vector2(touchPoint.vertex.x, touchPoint.vertex.y);
-      if (facing !== "down") {
+      if (facing === "up") {
+        this.touchingAt = this.getCenter();
+      } else if (facing === "down") {
+        this.touchingAt.x = bodyB.position.x;
+        this.touchingAt.y = bodyB.position.y;
+      } else {
         if (this.touchingAt.x > bodyB.bounds.min.x && this.touchingAt.x < bodyB.bounds.max.x) {
           const midPoint = bodyB.bounds.min.x / 2 + bodyB.bounds.max.x / 2;
           if (this.touchingAt.x < midPoint) {
@@ -444,10 +450,6 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
           } else {
             this.touchingAt.x = bodyB.bounds.max.x;
           }
-        }
-      } else if (facing === "down") {
-        if (this.touchingAt.y > bodyB.bounds.min.y && this.touchingAt.y < bodyB.bounds.max.y) {
-          this.touchingAt.y = bodyB.bounds.max.y;
         }
       }
     }

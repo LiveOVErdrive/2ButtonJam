@@ -118,7 +118,7 @@ export default class Level extends Phaser.Scene {
           this.matter.add.image(obj.x!, obj.y!, "pole", undefined, <any>{
             shape: {
               type: 'circle',
-              radius: 2
+              radius: 8
             },
             isStatic: true,
             isSensor: true,

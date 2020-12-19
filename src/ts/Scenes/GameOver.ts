@@ -24,7 +24,6 @@ export default class GameOver extends Phaser.Scene {
     const textYPosition = this.cameras.main.height;
 
     const newGameText = this.createShadowedText(textYPosition * 0.8, 32, "Press Space to continue");
-    newGameText.setInteractive();
     newGameText.on("pointerdown", this.openMainMenu, this);
     this.input.keyboard.once("keyup-SPACE", this.openMainMenu, this);
 

@@ -23,8 +23,6 @@ export default class MainMenu extends Phaser.Scene {
     const textYPosition = this.cameras.main.height;
 
     const newGameText = this.createShadowedText(textYPosition * 0.75, 48, "Press Space to Start");
-    newGameText.setInteractive();
-    newGameText.on("pointerdown", this.startLevel1, this);
     this.input.keyboard.once("keyup-SPACE", this.startLevel1, this);
 
     this.createShadowedText(textYPosition * 0.9, 32, "Jump: Hold and release Space\nClimb: Shift");

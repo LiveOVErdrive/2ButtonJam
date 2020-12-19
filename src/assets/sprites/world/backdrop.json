@@ -1,6 +1,6 @@
 { "frames": {
    "0": {
-    "frame": { "x": 0, "y": 0, "w": 1280, "h": 640 },
+    "frame": { "x": 1, "y": 1, "w": 1282, "h": 642 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 1280, "h": 640 },
@@ -8,7 +8,7 @@
     "duration": 100
    },
    "1": {
-    "frame": { "x": 0, "y": 640, "w": 1280, "h": 640 },
+    "frame": { "x": 1, "y": 644, "w": 1282, "h": 642 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 1280, "h": 640 },
@@ -16,7 +16,7 @@
     "duration": 100
    },
    "2": {
-    "frame": { "x": 0, "y": 1280, "w": 1280, "h": 640 },
+    "frame": { "x": 1, "y": 1287, "w": 1282, "h": 642 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 1280, "h": 640 },
@@ -24,7 +24,7 @@
     "duration": 100
    },
    "3": {
-    "frame": { "x": 0, "y": 1920, "w": 1280, "h": 640 },
+    "frame": { "x": 1, "y": 1930, "w": 1282, "h": 642 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 1280, "h": 640 },
@@ -32,7 +32,7 @@
     "duration": 100
    },
    "4": {
-    "frame": { "x": 0, "y": 2560, "w": 1280, "h": 640 },
+    "frame": { "x": 1, "y": 2573, "w": 1282, "h": 642 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 1280, "h": 640 },
@@ -40,7 +40,7 @@
     "duration": 100
    },
    "5": {
-    "frame": { "x": 0, "y": 3200, "w": 1280, "h": 640 },
+    "frame": { "x": 1, "y": 3216, "w": 1282, "h": 642 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 1280, "h": 640 },
@@ -53,7 +53,7 @@
   "version": "1.2.25",
   "image": "backdrop.png",
   "format": "RGBA8888",
-  "size": { "w": 1280, "h": 3840 },
+  "size": { "w": 1284, "h": 3859 },
   "scale": "1",
   "frameTags": [
    { "name": "mountains", "from": 0, "to": 2, "direction": "forward" },

@@ -8,12 +8,17 @@ import { Levels } from "../Game";
 import Climber from "../Prefabs/Climber";
 import IceBlock from "../Prefabs/IceBlock";
 import Snowflake, { SnowflakeCount } from "../Prefabs/Snowflake";
-import Utilities from "../Utilities";
 import GameOver from "./GameOver";
 import Victory from "./Victory";
 
 export class LevelConfig {
-  constructor(public levelNumber: number, public snowflakes: number, public transitionColor: number) { }
+  doneTime: number | undefined;
+
+  constructor(
+    public startTime: number,
+    public levelNumber: number,
+    public snowflakes: number,
+    public transitionColor: number) { }
 }
 
 type LevelState = "live" | "dead" | "won";
@@ -36,6 +41,8 @@ export default class Level extends Phaser.Scene {
   scoreCamera: Phaser.Cameras.Scene2D.Camera;
   statusContainer: Phaser.GameObjects.Container;
   snowFlakeCount: Phaser.GameObjects.BitmapText;
+  elapsedTime: Phaser.GameObjects.BitmapText;
+  config: LevelConfig;
 
   public preload(): void {
     // Preload as needed.
@@ -46,6 +53,7 @@ export default class Level extends Phaser.Scene {
   }
 
   public create(levelConfig: LevelConfig): void {
+    this.config = levelConfig;
     this.startTime = undefined;
     this.doneTime = undefined;
     this.state = "live";
@@ -79,7 +87,11 @@ export default class Level extends Phaser.Scene {
     this.snowFlakeCount = this.add.bitmapText(30, 1, "Label", "000")
       .setTint(0xffffff)
       .setData(SnowflakeCount, levelConfig.snowflakes);
-    this.statusContainer.add(this.snowFlakeCount);
+
+    this.elapsedTime = this.add.bitmapText(this.cameras.main.width - 6, 1, "Label", "0 s")
+      .setTint(0xffffff)
+      .setOrigin(1, 0);
+    this.statusContainer.add([this.snowFlakeCount, this.elapsedTime]);
   }
 
   private loadMap(levelConfig: LevelConfig) {
@@ -173,20 +185,20 @@ export default class Level extends Phaser.Scene {
       this.doneTime = this.time.now;
       this.climber.setVelocityY(-3);
 
-      const settings = <LevelConfig>this.sys.settings.data;
-      settings.levelNumber++;
+      this.config.levelNumber++;
 
-      if (settings.levelNumber > Levels) {
+      if (this.config.levelNumber > Levels) {
+        const runTime = this.doneTime - this.config.startTime;
         this.time.delayedCall(
           1000,
-          () => this.scene.start(Victory.Name),
+          () => this.scene.start(Victory.Name, { runTime: runTime }),
           undefined,
           this);
 
       } else {
         this.time.delayedCall(
           1000,
-          () => this.scene.restart(settings),
+          () => this.scene.restart(this.config),
           undefined,
           this);
       }
@@ -196,6 +208,9 @@ export default class Level extends Phaser.Scene {
   public update() {
     // Reposition status display
     this.statusContainer.setPosition(this.cameras.main.worldView.x, this.cameras.main.worldView.y);
+
+    // Update elapsed time
+    this.elapsedTime.setText(`${((this.time.now - this.config.startTime) / 1000).toFixed(1)} s`);
 
     // Update snowflake count
     const snowflakes = <number>this.data.get(SnowflakeCount);
@@ -239,7 +254,7 @@ export default class Level extends Phaser.Scene {
       const position = this.climber.getCenter();
       this.doneGraphics
         .clear()
-        .lineStyle(800, (<LevelConfig>this.sys.settings.data).transitionColor)
+        .lineStyle(800, this.config.transitionColor)
         .arc(position.x, position.y, radius, 0, Math.PI * 2, false, 0.02)
         .stroke()
     }
@@ -257,9 +272,9 @@ export default class Level extends Phaser.Scene {
     this.state = "dead";
     this.doneTime = this.time.now;
     if (snowflakes > 0) {
-      this.data.set(SnowflakeCount, Math.max(0, snowflakes - 5));
-      const settings = <LevelConfig>this.sys.settings.data;
-      settings.transitionColor = 0;
+      const newCount = Math.max(0, snowflakes - 5);
+      this.data.set(SnowflakeCount, newCount);
+      this.config.transitionColor = 0;
       this.time.delayedCall(
         1000,
         () => this.scene.restart(),

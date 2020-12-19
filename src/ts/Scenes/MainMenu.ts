@@ -38,10 +38,10 @@ export default class MainMenu extends Phaser.Scene {
 
     });
 
-    const newGameText = this.createShadowedText(textYPosition * 0.75, 48, "Press Space to Start");
+    const newGameText = this.createShadowedText(textYPosition * 0.70, 48, "Press space to Start");
     this.input.keyboard.once("keyup-SPACE", this.startLevel1, this);
 
-    this.createShadowedText(textYPosition * 0.9, 32, "Jump: Hold and release Space\nClimb: Shift");
+    this.createShadowedText(textYPosition * 0.9, 32, "Press space to aim & jump\nPress shift to climb\nCollect snowflakes & reach the summit!");
 
     this.transitionGraphics = this.add.graphics();
     this.tweens.add({
@@ -59,7 +59,7 @@ export default class MainMenu extends Phaser.Scene {
     });
     this.time.delayedCall(
       500,
-      () => this.scene.start(Level.Name, new LevelConfig(1, 0, 0xffffff)),
+      () => this.scene.start(Level.Name, new LevelConfig(this.time.now, 1, 0, 0xffffff)),
       undefined,
       this);
   }

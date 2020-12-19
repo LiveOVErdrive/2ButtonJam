@@ -18,12 +18,20 @@ export default class Victory extends Phaser.Scene {
     // Preload as needed.
   }
 
-  public create(): void {
+  public create(config: { runTime: number }): void {
     this.add.image(0, 0, "victoryBackground").setOrigin(0, 0);
     const textYPosition = this.cameras.main.height;
 
-    const newGameText = this.createShadowedText(textYPosition * 0.8, 32, "Press Space to continue");
-    newGameText.on("pointerdown", this.openMainMenu, this);
+    this.createShadowedText(
+      textYPosition * 0.75,
+      48,
+      `Congratulations!\nYour run took ${(config.runTime / 1000).toFixed(1)} s!`)
+      .setCenterAlign();
+    this.createShadowedText(
+      textYPosition * 0.9,
+      32,
+      "Press Space to continue")
+      .setCenterAlign();
     this.input.keyboard.once("keyup-SPACE", this.openMainMenu, this);
 
     this.transitionGraphics = this.add.graphics();

@@ -3,11 +3,10 @@
  * Portions copyright 2020, Justin Reardon.
 */
 
-import SplashScreen from "./SplashScreen";
-import Utilities from "../Utilities";
-import Level, { LevelConfig } from "./Level";
+import { LevelConfig } from "./Level";
 import MainMenu from "./MainMenu";
 import { Levels } from "../Game";
+import BackgroundAudio from "./BackgroundAudio";
 
 export default class Preloader extends Phaser.Scene {
   /**
@@ -40,9 +39,12 @@ export default class Preloader extends Phaser.Scene {
     }
 
     this.load.bitmapFont("Label", "fonts/kenney_pixel_32.png", "fonts/kenney_pixel_32.xml");
+
+    this.load.audio("background", "sound/2buttonOST.mp3");
   }
 
   public create(): void {
+    this.scene.run(BackgroundAudio.Name);
     this.scene.start(MainMenu.Name, new LevelConfig(this.time.now, 1, 0, 0xffffff));
   }
 

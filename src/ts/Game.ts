@@ -7,11 +7,11 @@ import 'phaser';
 import Boot from "./Scenes/Boot";
 import Preloader from "./Scenes/Preloader";
 import MainMenu from "./Scenes/MainMenu";
-import SplashScreen from "./Scenes/SplashScreen";
 import Level from "./Scenes/Level";
 import PhaserMatterCollisionPlugin from "phaser-matter-collision-plugin";
 import GameOver from './Scenes/GameOver';
 import Victory from './Scenes/Victory';
+import BackgroundAudio from './Scenes/BackgroundAudio';
 
 const gameWidth = 640;
 const gameHeight = 480;
@@ -118,7 +118,7 @@ export default class Game extends Phaser.Game {
 
     this.scene.add(Boot.Name, Boot);
     this.scene.add(Preloader.Name, Preloader);
-    this.scene.add(SplashScreen.Name, SplashScreen);
+    this.scene.add(BackgroundAudio.Name, BackgroundAudio);
     this.scene.add(MainMenu.Name, MainMenu);
     this.scene.add(Level.Name, Level);
     this.scene.add(GameOver.Name, GameOver);

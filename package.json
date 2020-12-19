@@ -18,7 +18,7 @@
     "phaser-matter-collision-plugin": "^0.10.2"
   },
   "scripts": {
-    "build": "webpack --mode production && zip -r -X 2ButtonJam.zip public",
+    "build": "webpack --mode production && zip -r -X 2ButtonJam-build.zip public && mv 2ButtonJam-build.zip 2ButtonJam.zip",
     "build-dev": "webpack --mode none",
     "start:dev": "webpack-dev-server --mode development",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx || (exit 0)"

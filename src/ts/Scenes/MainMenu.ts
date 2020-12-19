@@ -3,6 +3,7 @@
  * Portions copyright 2020, Justin Reardon.
 */
 
+import BackgroundAudio from "./BackgroundAudio";
 import Level, { LevelConfig } from "./Level";
 
 export default class MainMenu extends Phaser.Scene {
@@ -40,8 +41,9 @@ export default class MainMenu extends Phaser.Scene {
 
     const newGameText = this.createShadowedText(textYPosition * 0.70, 48, "Press space to Start");
     this.input.keyboard.once("keyup-SPACE", this.startLevel1, this);
+    this.input.keyboard.on("keyup-SHIFT", this.toggleAudio, this);
 
-    this.createShadowedText(textYPosition * 0.9, 32, "Press space to aim & jump\nPress shift to climb\nCollect snowflakes & reach the summit!");
+    this.createShadowedText(textYPosition * 0.9, 32, "Press shift to toggle audio\nSpace: aim & jump    Shift: climb\nCollect snowflakes & reach the summit!");
 
     this.transitionGraphics = this.add.graphics();
     this.tweens.add({
@@ -49,6 +51,10 @@ export default class MainMenu extends Phaser.Scene {
       transitionRadius: { from: 1000, to: 1 },
       duration: 500
     });
+  }
+
+  private toggleAudio() {
+    this.scene.get(BackgroundAudio.Name).data.toggle(BackgroundAudio.AudioEnabled);
   }
 
   private startLevel1() {
@@ -68,7 +74,7 @@ export default class MainMenu extends Phaser.Scene {
     this.add.bitmapText(this.cameras.main.centerX + 1, textYPosition + 1, "Label", text, fontSize)
       .setOrigin(0.5)
       .setCenterAlign()
-      .setTint(0xffffff);
+      .setTint(0xeeeeee);
     return this.add.bitmapText(this.cameras.main.centerX, textYPosition, "Label", text, fontSize)
       .setOrigin(0.5)
       .setCenterAlign()

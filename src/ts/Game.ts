@@ -19,10 +19,10 @@ const gameHeight = 480;
 function gameConfig(debug: boolean): Phaser.Types.Core.GameConfig {
   return {
     width: gameWidth,
-    height: 480,
+    height: gameHeight,
     type: Phaser.AUTO,
     parent: "content",
-    title: "Starter Project for Phaser 3 with Visual Studio Code, TypeScript, and NodeJS",
+    title: "Summit",
     render: {
       pixelArt: true
     },

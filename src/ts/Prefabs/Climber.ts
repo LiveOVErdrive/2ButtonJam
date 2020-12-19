@@ -108,6 +108,8 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
           this.enterStateClimbing(this.touchingAt);
         } else if (!this.isTouching.left && !this.isTouching.right) {
           this.enterStateFalling();
+        } else if (this.isTouching.ground) {
+          this.enterStateStanding();
         }
         break;
       case "hanging":
@@ -127,6 +129,9 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
       case "prepping":
         if (keyA === "pressed") {
           this.enterStateJumping();
+        } else if (keyB === "pressed") {
+          this.tryFinishJump(false);
+          this.aimer.setAlpha(0);
         } else if (
           !this.isTouching.left &&
           !this.isTouching.right &&
@@ -147,11 +152,11 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     }
   }
 
-  private tryFinishJump() {
+  private tryFinishJump(update: boolean = true) {
     if (this.isTouching.top) {
-      this.enterStateHanging(true);
+      this.enterStateHanging(update);
     } else if ((this.isTouching.left || this.isTouching.right) && !this.isTouching.ground) {
-      this.enterStateClinging(true);
+      this.enterStateClinging(update);
     } else if (this.isTouching.ground) {
       this.enterStateStanding();
     }
@@ -298,12 +303,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
 
     const direction = Phaser.Math.DegToRad(this.aimingDisplay.getValue());
     const jumpForce = new Phaser.Math.Vector2().setToPolar(direction, 0.02);
-    if (jumpForce.y > 0) {
-      jumpForce.y = 0;
-    } else {
-      jumpForce.y += -0.01;
-
-    }
+    jumpForce.y += -0.01;
 
     this.flipX = jumpForce.x > 0;
 
@@ -378,7 +378,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     switch (facing) {
       case "left":
         this.flipX = false;
-        this.displayOriginX = 22;
+        this.displayOriginX = 21;
         this.displayOriginY = 22;
         break;
       case "right":

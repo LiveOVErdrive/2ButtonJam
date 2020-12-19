@@ -67,6 +67,8 @@ export default class Level extends Phaser.Scene {
     this.climber.setFacing("right");
     camera.startFollow(this.climber, true);
     camera.deadzone = new Phaser.Geom.Rectangle(160, 120, 160, 120);
+    camera.transparent = false;
+    camera.setBackgroundColor(0x92d3ff);
 
     // Setup finish sensor
     this.setupFinish(map.findObject("objects", obj => obj.name === "finish"));
@@ -102,7 +104,7 @@ export default class Level extends Phaser.Scene {
       map.addTilesetImage("spikes", "spikes"),
     ];
 
-    map.createLayer("background", tiles, 0, 0).setAlpha(0.7);
+    map.createLayer("background", tiles, 0, 0);
 
     const cliffsLayer = map.createLayer("cliffs", tiles, 0, 0)
       .setCollisionByProperty({ collides: true });
@@ -133,7 +135,7 @@ export default class Level extends Phaser.Scene {
           this.matter.add.image(obj.x!, obj.y!, "pole", undefined, <any>{
             shape: {
               type: 'circle',
-              radius: 8
+              radius: 6
             },
             isStatic: true,
             isSensor: true,
@@ -243,8 +245,9 @@ export default class Level extends Phaser.Scene {
       const radius = Math.max(400, 1000 - (this.time.now - this.doneTime) * 1);
       const position = this.climber.getCenter();
       this.doneGraphics
+        .setVisible(true)
         .clear()
-        .lineStyle(800, this.state === "won" ? 0xffffff : 0x000000)
+        .lineStyle(1000, this.state === "won" ? 0xffffff : 0x000000)
         .arc(position.x, position.y, radius, 0, Math.PI * 2, false, 0.02)
         .stroke()
     } else if (!this.startTime || this.startTime + 1000 > this.time.now) {
@@ -254,10 +257,13 @@ export default class Level extends Phaser.Scene {
       const radius = 200 + this.time.now - this.startTime;
       const position = this.climber.getCenter();
       this.doneGraphics
+        .setVisible(true)
         .clear()
-        .lineStyle(800, this.config.transitionColor)
+        .lineStyle(1000, this.config.transitionColor)
         .arc(position.x, position.y, radius, 0, Math.PI * 2, false, 0.02)
         .stroke()
+    } else {
+      this.doneGraphics.setVisible(false);
     }
 
     this.climber.updateAction(

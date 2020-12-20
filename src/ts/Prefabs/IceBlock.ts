@@ -4,9 +4,9 @@
 
 import { CollisionEvent, CollisionCategories, matterCollision } from "../Collisions";
 
-const msBeforeFlash = 1000;
+const msBeforeFlash = 500;
 const msBeforeCrumble = 2000;
-const msBeforeFall = msBeforeCrumble + 200;
+const msBeforeFall = msBeforeCrumble + 100;
 
 export default class IceBlock extends Phaser.Physics.Matter.Sprite {
   private lastTouch: number | undefined = undefined;
@@ -14,7 +14,7 @@ export default class IceBlock extends Phaser.Physics.Matter.Sprite {
 
   constructor(world: Phaser.Physics.Matter.World, x: number, y: number) {
     super(world, x, y, 'iceblock', 0, {
-      chamfer: { radius: 4 },
+      chamfer: { radius: 1 },
       isStatic: true,
       friction: 0,
       collisionFilter: {

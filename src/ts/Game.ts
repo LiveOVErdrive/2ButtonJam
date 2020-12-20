@@ -7,10 +7,11 @@ import 'phaser';
 import Boot from "./Scenes/Boot";
 import Preloader from "./Scenes/Preloader";
 import MainMenu from "./Scenes/MainMenu";
-import SplashScreen from "./Scenes/SplashScreen";
 import Level from "./Scenes/Level";
-import MainSettings from "./Scenes/MainSettings";
 import PhaserMatterCollisionPlugin from "phaser-matter-collision-plugin";
+import GameOver from './Scenes/GameOver';
+import Victory from './Scenes/Victory';
+import BackgroundAudio from './Scenes/BackgroundAudio';
 
 const gameWidth = 640;
 const gameHeight = 480;
@@ -18,10 +19,10 @@ const gameHeight = 480;
 function gameConfig(debug: boolean): Phaser.Types.Core.GameConfig {
   return {
     width: gameWidth,
-    height: 480,
+    height: gameHeight,
     type: Phaser.AUTO,
     parent: "content",
-    title: "Starter Project for Phaser 3 with Visual Studio Code, TypeScript, and NodeJS",
+    title: "Summit",
     render: {
       pixelArt: true
     },
@@ -108,6 +109,8 @@ function gameConfig(debug: boolean): Phaser.Types.Core.GameConfig {
   };
 }
 
+export const Levels = 6;
+
 export default class Game extends Phaser.Game {
   constructor(config: Phaser.Types.Core.GameConfig) {
 
@@ -115,10 +118,11 @@ export default class Game extends Phaser.Game {
 
     this.scene.add(Boot.Name, Boot);
     this.scene.add(Preloader.Name, Preloader);
-    this.scene.add(SplashScreen.Name, SplashScreen);
+    this.scene.add(BackgroundAudio.Name, BackgroundAudio);
     this.scene.add(MainMenu.Name, MainMenu);
     this.scene.add(Level.Name, Level);
-    this.scene.add(MainSettings.Name, MainSettings);
+    this.scene.add(GameOver.Name, GameOver);
+    this.scene.add(Victory.Name, Victory);
     this.scene.start(Boot.Name);
   }
 }

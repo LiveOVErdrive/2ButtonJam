@@ -3,9 +3,10 @@
  * Portions copyright 2020, Justin Reardon.
 */
 
-import SplashScreen from "./SplashScreen";
-import Utilities from "../Utilities";
-import Level, { LevelConfig } from "./Level";
+import { LevelConfig } from "./Level";
+import MainMenu from "./MainMenu";
+import { Levels } from "../Game";
+import BackgroundAudio from "./BackgroundAudio";
 
 export default class Preloader extends Phaser.Scene {
   /**
@@ -20,18 +21,37 @@ export default class Preloader extends Phaser.Scene {
 
     this.load.aseprite('aim', 'sprites/icons/aim.png', 'sprites/icons/aim.json');
     this.load.aseprite('climber', 'sprites/player/climber.png', 'sprites/player/climber.json');
+    this.load.aseprite('endflag', 'sprites/world/endflag.png', 'sprites/world/endflag.json');
     this.load.aseprite('iceblock', 'sprites/world/iceblock.png', 'sprites/world/iceblock.json');
     this.load.aseprite('snowflake', 'sprites/items/snowflake.png', 'sprites/items/snowflake.json');
+    this.load.spritesheet('backdrops', 'sprites/world/backdrop.png', { margin: 2, spacing: 2, frameWidth: 1280, frameHeight: 640 });
+
+    this.load.image("titleBackground", "sprites/screens/titleFull.png");
+    this.load.image("gameOverBackground", "sprites/screens/gameOver.png");
+    this.load.aseprite('victory', 'sprites/screens/victory.png', 'sprites/screens/victory.json');
 
     this.load.image("cliffs", "sprites/world/cliff.png");
     this.load.image("iceblock", "sprites/world/iceblock.png");
     this.load.image("spikes", "sprites/world/spikes.png");
     this.load.image("pole", "sprites/world/pole_noanim.png");
-    this.load.tilemapTiledJSON("level1", "maps/level1.json");
+
+    for (let i = 1; i <= Levels; i++) {
+      this.load.tilemapTiledJSON(`level${i}`, `maps/level${i}.json`);
+    }
+
+    this.load.bitmapFont("Label", "fonts/kenney_pixel_32.png", "fonts/kenney_pixel_32.xml");
+
+    this.load.audio("background", "sound/2buttonOST.mp3");
+    this.load.audio("die", "sound/sfx/die.wav");
+    this.load.audio("jump", "sound/sfx/jump.wav");
+    this.load.audio("land", "sound/sfx/land.wav");
+    this.load.audio("levelwin", "sound/sfx/levelwin.wav");
+    this.load.audio("pickup", "sound/sfx/pickup.wav");
   }
 
   public create(): void {
-    this.scene.start(Level.Name, new LevelConfig("level1"));
+    this.scene.run(BackgroundAudio.Name);
+    this.scene.start(MainMenu.Name);
   }
 
   public update(): void {
@@ -44,62 +64,21 @@ export default class Preloader extends Phaser.Scene {
   private addProgressBar(): void {
     const width = this.cameras.main.width;
     const height = this.cameras.main.height;
-    /** Customizable. This text color will be used around the progress bar. */
-    const outerTextColor = '#ffffff';
 
     const progressBar = this.add.graphics();
     const progressBox = this.add.graphics();
     progressBox.fillStyle(0x222222, 0.8);
     progressBox.fillRect(width / 4, height / 2 - 30, width / 2, 50);
 
-    const loadingText = this.make.text({
-      x: width / 2,
-      y: height / 2 - 50,
-      text: "Loading...",
-      style: {
-        font: "20px monospace"
-      }
-    });
-    loadingText.setOrigin(0.5, 0.5);
-
-    const percentText = this.make.text({
-      x: width / 2,
-      y: height / 2 - 5,
-      text: "0%",
-      style: {
-        font: "18px monospace"
-      }
-    });
-    percentText.setOrigin(0.5, 0.5);
-
-    const assetText = this.make.text({
-      x: width / 2,
-      y: height / 2 + 50,
-      text: "",
-      style: {
-        font: "18px monospace"
-      }
-    });
-
-    assetText.setOrigin(0.5, 0.5);
-
     this.load.on("progress", (value: number) => {
-      percentText.setText(parseInt(value * 100 + "", 10) + "%");
       progressBar.clear();
       progressBar.fillStyle(0xffffff, 1);
       progressBar.fillRect((width / 4) + 10, (height / 2) - 30 + 10, (width / 2 - 10 - 10) * value, 30);
     });
 
-    this.load.on("fileprogress", (file: Phaser.Loader.File) => {
-      assetText.setText("Loading asset: " + file.key);
-    });
-
     this.load.on("complete", () => {
       progressBar.destroy();
       progressBox.destroy();
-      loadingText.destroy();
-      percentText.destroy();
-      assetText.destroy();
     });
   }
 }

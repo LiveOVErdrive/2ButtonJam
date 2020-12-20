@@ -14,9 +14,10 @@ export default class IceBlock extends Phaser.Physics.Matter.Sprite {
 
   constructor(world: Phaser.Physics.Matter.World, x: number, y: number) {
     super(world, x, y, 'iceblock', 0, {
-      chamfer: { radius: 1 },
-      isStatic: true,
       friction: 0,
+      chamfer: { radius: 2 },
+      frictionStatic: 0,
+      isStatic: true,
       collisionFilter: {
         category: CollisionCategories.Solid | CollisionCategories.Grabbable,
         group: 0,

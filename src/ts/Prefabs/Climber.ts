@@ -178,7 +178,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
 
   private enterStateHanging(updateConstraint: boolean) {
     this.state = "hanging";
-    this.playAfterRepeat({ key: 'hang', repeat: -1, repeatDelay: 2000 });
+    this.playAfterRepeat({ key: 'hang', repeat: -1, repeatDelay: 0 });
 
     if (updateConstraint) {
       this.replaceHangingConstraint(this.touchingAt);

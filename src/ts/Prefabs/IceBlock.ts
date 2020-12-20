@@ -18,7 +18,7 @@ export default class IceBlock extends Phaser.Physics.Matter.Sprite {
       isStatic: true,
       friction: 0,
       collisionFilter: {
-        category: CollisionCategories.Solid | CollisionCategories.Grabbable | CollisionCategories.Ground,
+        category: CollisionCategories.Solid | CollisionCategories.Grabbable,
         group: 0,
         mask: CollisionCategories.Player
       }

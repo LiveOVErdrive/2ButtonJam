@@ -218,8 +218,6 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
           this.enterStateClinging(false);
           return;
         }
-        const direction = this.facing === "left" ? -1 : 1;
-        this.applyForce(new Phaser.Math.Vector2(direction * 0.0, -0.03));
         playSound(this.scene, "land");
 
         this.scene.time.delayedCall(

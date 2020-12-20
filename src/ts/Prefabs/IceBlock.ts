@@ -3,6 +3,7 @@
 */
 
 import { CollisionEvent, CollisionCategories, matterCollision } from "../Collisions";
+import { playSound } from "../Scenes/BackgroundAudio";
 
 const msBeforeFlash = 1000;
 const msBeforeCrumble = 2000;

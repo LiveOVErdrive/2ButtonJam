@@ -8,6 +8,7 @@ import { Levels } from "../Game";
 import Climber from "../Prefabs/Climber";
 import IceBlock from "../Prefabs/IceBlock";
 import Snowflake, { SnowflakeCount } from "../Prefabs/Snowflake";
+import { playSound } from "./BackgroundAudio";
 import GameOver from "./GameOver";
 import Victory from "./Victory";
 
@@ -74,20 +75,19 @@ export default class Level extends Phaser.Scene {
     camera.setBackgroundColor(0x92d3ff);
 
     const progress = (this.config.levelNumber - 1) / Levels;
-    const mountainOffset = (progress) * 300;
+    const mountainOffset = (progress) * 400;
     // Setup backdrop
-    this.add.tileSprite(0, mountainOffset, map.widthInPixels * 2, 0, "backdrops", 0)
+    this.add.image(0, mountainOffset, "backdrops", 0)
       .setOrigin(0, 0)
-      .setTilePosition(1000, 0)
       .setScrollFactor(0.9, 0)
       .setTint(0x888888)
       .setDepth(-1);
-    this.add.tileSprite(0, mountainOffset - 200 * (1 - progress), map.widthInPixels * 2, 0, "backdrops", 1)
+    this.add.image(0, mountainOffset - 200 * (1 - progress), "backdrops", 1)
       .setOrigin(0, 0)
       .setScrollFactor(0.9, 0)
       .setTint(0x72a3af)
       .setDepth(-2);
-    this.add.tileSprite(0, mountainOffset - 400 * (1 - progress), map.widthInPixels * 2, 0, "backdrops", 2)
+    this.add.image(0, mountainOffset - 400 * (1 - progress), "backdrops", 2)
       .setOrigin(0, 0)
       .setScrollFactor(0.9, 0)
       .setTint(0x82c3ef)
@@ -118,19 +118,23 @@ export default class Level extends Phaser.Scene {
 
     // Setup status display
     this.statusContainer = this.add.container(0, 0);
-    this.statusContainer.add(this.add.image(14, 14, "snowflake"));
 
     // Setup finish graphic
     this.doneGraphics = this.add.graphics();
 
-    this.snowFlakeCount = this.add.bitmapText(30, 1, "Label", "000")
+    const levelDisplay = this.add.bitmapText(4, 1, "Label", `Stage ${levelConfig.levelNumber}`)
+      .setTint(0xffffff);
+    this.snowFlakeCount = this.add.bitmapText(110, 1, "Label", "000")
       .setTint(0xffffff)
       .setData(SnowflakeCount, levelConfig.snowflakes);
 
     this.elapsedTime = this.add.bitmapText(this.cameras.main.width - 6, 1, "Label", "0 s")
       .setTint(0xffffff)
       .setOrigin(1, 0);
-    this.statusContainer.add([this.snowFlakeCount, this.elapsedTime]);
+
+    this.statusContainer.add(this.add.image(95, 14, "snowflake"));
+    this.statusContainer.add([levelDisplay, this.snowFlakeCount, this.elapsedTime]);
+    this.statusContainer.setScrollFactor(0, 0, true)
   }
 
   private loadMap(levelConfig: LevelConfig) {
@@ -224,14 +228,16 @@ export default class Level extends Phaser.Scene {
       this.state = "won";
       this.doneTime = this.time.now;
       this.climber.setVelocityY(-3);
-
       this.config.levelNumber++;
+      playSound(this, "levelwin");
 
       if (this.config.levelNumber > Levels) {
         const runTime = this.doneTime - this.config.startTime;
         this.time.delayedCall(
           1000,
-          () => this.scene.start(Victory.Name, { runTime: runTime }),
+          () => {
+            this.scene.start(Victory.Name, { runTime: runTime });
+          },
           undefined,
           this);
 
@@ -246,8 +252,6 @@ export default class Level extends Phaser.Scene {
   }
 
   public update() {
-    // Reposition status display
-    this.statusContainer.setPosition(this.cameras.main.worldView.x, this.cameras.main.worldView.y);
 
     // Update elapsed time
     this.elapsedTime.setText(`${((this.time.now - this.config.startTime) / 1000).toFixed(1)} s`);
@@ -261,12 +265,18 @@ export default class Level extends Phaser.Scene {
           .toLocaleString(undefined, { minimumIntegerDigits: 3 }))
     }
 
+    if (this.snowFlakeCount.getData(SnowflakeCount) < this.config.levelNumber) {
+      this.snowFlakeCount.setTint(0xee0000);
+    } else {
+      this.snowFlakeCount.setTint(0xffffff);
+    }
+
     // Update game state
     if (this.state === "live") {
-      if (
-        !this.cameras.main.getBounds().contains(this.climber.x, this.climber.y) ||
-        this.climber.state === "dead"
-      ) {
+      if (!this.cameras.main.getBounds().contains(this.climber.x, this.climber.y)) {
+        playSound(this, "die");
+        this.transitionToDeadState(snowflakes);
+      } else if (this.climber.state === "dead") {
         this.transitionToDeadState(snowflakes);
       }
     }
@@ -315,8 +325,9 @@ export default class Level extends Phaser.Scene {
   private transitionToDeadState(snowflakes: number) {
     this.state = "dead";
     this.doneTime = this.time.now;
-    if (snowflakes > 0) {
-      const newCount = Math.max(0, snowflakes - 5);
+    const level = this.config.levelNumber;
+    if (snowflakes >= level) {
+      const newCount = Math.max(0, snowflakes - level);
       this.data.set(SnowflakeCount, newCount);
       this.config.transitionColor = 0;
       this.time.delayedCall(

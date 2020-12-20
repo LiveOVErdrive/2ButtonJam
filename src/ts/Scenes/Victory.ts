@@ -3,6 +3,7 @@
  * Portions copyright 2020, Justin Reardon.
 */
 
+import { playSound } from "./BackgroundAudio";
 import MainMenu from "./MainMenu";
 
 export default class Victory extends Phaser.Scene {

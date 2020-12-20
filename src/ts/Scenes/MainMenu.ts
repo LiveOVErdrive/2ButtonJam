@@ -66,7 +66,7 @@ export default class MainMenu extends Phaser.Scene {
     });
     this.time.delayedCall(
       550,
-      () => this.scene.start(Level.Name, new LevelConfig(this.time.now, 6, 0, 0xffffff)),
+      () => this.scene.start(Level.Name, new LevelConfig(this.time.now, 4, 0, 0xffffff)),
       undefined,
       this);
   }

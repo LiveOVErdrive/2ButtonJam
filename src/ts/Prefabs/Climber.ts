@@ -191,7 +191,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
   }
 
   private enterStateClimbing(position: Phaser.Math.Vector2) {
-    const climbFrom = new Phaser.Math.Vector2(position.x, position.y - 24);
+    const climbTo = new Phaser.Math.Vector2(position.x, position.y - 24);
 
     this.state = "climbing";
     this.play("climb").playAfterRepeat("Idle");
@@ -202,36 +202,23 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
           return;
         }
 
-        const top = this.getTopCenter();
-        const intersection = this.scene.matter.intersectPoint(top.x, top.y - 24).find(x => {
-          if ('collisionFilter' in x) {
-            const body = <MatterJS.BodyType>x;
-            return (body.collisionFilter.category & CollisionCategories.Solid) > 0;
-          }
-        });
-
-        if (
-          this.scene.matter.intersectRect(climbFrom.x - 2, climbFrom.y - 2, 4, 4).length === 0 ||
-          intersection
-        ) {
-          this.play("Idle")
-          this.enterStateClinging(false);
-          return;
-        }
         playSound(this.scene, "land");
 
         this.scene.time.delayedCall(
           150,
           () => {
             if (this.state === "climbing") {
-              this.replaceHangingConstraint(climbFrom);
+              this.setIgnoreGravity(true);
+              this.replaceHangingConstraint(undefined);
+              this.setVelocityY(-3);
             }
           });
         this.scene.time.delayedCall(
           300,
           () => {
+            this.setIgnoreGravity(false);
             if (this.state === "climbing") {
-              this.enterStateClinging(false);
+              this.enterStateClinging(true);
             }
           });
       }

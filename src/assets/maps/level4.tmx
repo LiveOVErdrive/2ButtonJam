@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="48">
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="48">
  <editorsettings>
   <export target="level4.json" format="json"/>
  </editorsettings>
@@ -228,8 +228,8 @@
   <tile id="24">
    <properties>
     <property name="collides" type="bool" value="true"/>
-    <property name="grabbable" type="bool" value="true"/>
-    <property name="ground" type="bool" value="false"/>
+    <property name="grabbable" type="bool" value="false"/>
+    <property name="ground" type="bool" value="true"/>
    </properties>
   </tile>
   <tile id="25">

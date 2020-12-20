@@ -109,7 +109,7 @@ function gameConfig(debug: boolean): Phaser.Types.Core.GameConfig {
   };
 }
 
-export const Levels = 4;
+export const Levels = 5;
 
 export default class Game extends Phaser.Game {
   constructor(config: Phaser.Types.Core.GameConfig) {

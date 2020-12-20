@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="48">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="48">
  <editorsettings>
   <export target="level4.json" format="json"/>
  </editorsettings>
@@ -159,8 +159,8 @@
     <property name="ground" type="bool" value="false"/>
    </properties>
    <objectgroup draworder="index" id="2">
-    <object id="1" x="0" y="0">
-     <polygon points="0,0 16,16 0,16"/>
+    <object id="2" x="0" y="0">
+     <polygon points="0,0 16,0 16,16"/>
     </object>
    </objectgroup>
   </tile>
@@ -170,6 +170,11 @@
     <property name="grabbable" type="bool" value="false"/>
     <property name="ground" type="bool" value="false"/>
    </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 16,0 0,16"/>
+    </object>
+   </objectgroup>
   </tile>
   <tile id="17">
    <properties>
@@ -186,6 +191,151 @@
    </properties>
   </tile>
   <tile id="19">
+   <properties>
+    <property name="collides" type="bool" value="false"/>
+    <property name="grabbable" type="bool" value="false"/>
+    <property name="ground" type="bool" value="false"/>
+   </properties>
+  </tile>
+  <tile id="20">
+   <properties>
+    <property name="collides" type="bool" value="false"/>
+    <property name="grabbable" type="bool" value="false"/>
+    <property name="ground" type="bool" value="false"/>
+   </properties>
+  </tile>
+  <tile id="21">
+   <properties>
+    <property name="collides" type="bool" value="false"/>
+    <property name="grabbable" type="bool" value="false"/>
+    <property name="ground" type="bool" value="false"/>
+   </properties>
+  </tile>
+  <tile id="22">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+    <property name="grabbable" type="bool" value="true"/>
+    <property name="ground" type="bool" value="false"/>
+   </properties>
+  </tile>
+  <tile id="23">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+    <property name="grabbable" type="bool" value="true"/>
+    <property name="ground" type="bool" value="false"/>
+   </properties>
+  </tile>
+  <tile id="24">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+    <property name="grabbable" type="bool" value="true"/>
+    <property name="ground" type="bool" value="false"/>
+   </properties>
+  </tile>
+  <tile id="25">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+    <property name="grabbable" type="bool" value="false"/>
+    <property name="ground" type="bool" value="false"/>
+   </properties>
+  </tile>
+  <tile id="26">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+    <property name="grabbable" type="bool" value="false"/>
+    <property name="ground" type="bool" value="false"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 16,0 16,16 1.9375,14.0313"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="27">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+    <property name="grabbable" type="bool" value="false"/>
+    <property name="ground" type="bool" value="false"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 16,0 14.0085,14.0455 0,16"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="28">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+    <property name="grabbable" type="bool" value="true"/>
+    <property name="ground" type="bool" value="false"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="16" y="0">
+     <polygon points="0,0 0,16 -16,16 -14.0398,1.92898"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="29">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+    <property name="grabbable" type="bool" value="true"/>
+    <property name="ground" type="bool" value="false"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 0,16 16,16 14.1023,1.96023"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="30">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+    <property name="grabbable" type="bool" value="false"/>
+    <property name="ground" type="bool" value="false"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="16" y="16">
+     <polygon points="0,0 0,-16 -16,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="31">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+    <property name="grabbable" type="bool" value="false"/>
+    <property name="ground" type="bool" value="false"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0">
+     <polygon points="0,16 16,16 0,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="32">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+    <property name="grabbable" type="bool" value="false"/>
+    <property name="ground" type="bool" value="false"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="2" x="0" y="0">
+     <polygon points="0,0 16,0 16,16"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="33">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+    <property name="grabbable" type="bool" value="false"/>
+    <property name="ground" type="bool" value="false"/>
+   </properties>
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 16,0 0,16"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="34">
    <properties>
     <property name="collides" type="bool" value="false"/>
     <property name="grabbable" type="bool" value="false"/>

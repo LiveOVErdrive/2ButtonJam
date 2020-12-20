@@ -47,18 +47,18 @@ export default class BackgroundAudio extends Phaser.Scene {
       this.backgroundAudio.play();
     }
 
-    if (audioOn) {
-      this.tryPlay("die");
-      this.tryPlay("jump");
-      this.tryPlay("land");
-      this.tryPlay("levelwin");
-      this.tryPlay("pickup");
-    }
+    this.tryPlay("die", audioOn);
+    this.tryPlay("jump", audioOn);
+    this.tryPlay("land", audioOn);
+    this.tryPlay("levelwin", audioOn);
+    this.tryPlay("pickup", audioOn);
   }
 
-  private tryPlay(sound: string) {
+  private tryPlay(sound: string, audioOn: boolean) {
     if (this.data.get(sound)) {
-      this.sound.play(sound);
+      if (audioOn) {
+        this.sound.play(sound);
+      }
       this.data.toggle(sound);
     }
   }

@@ -243,25 +243,25 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
         length = 150;
         break;
       case "right":
-        start = 90 - 15;
-        stop = -90 + 15;
-        length = 150;
+        start = 90 - 10;
+        stop = -90 + 10;
+        length = 160;
         break;
       case "down":
-        start = 270 - 15;
-        stop = -90 + 15;
-        length = 330;
+        start = 270 - 10;
+        stop = -90 + 10;
+        length = 340;
         break;
       case "up":
-        start = 180 + 15;
-        stop = 360 - 15;
-        length = 150;
+        start = 180 + 10;
+        stop = 360 - 10;
+        length = 160;
     }
 
     const animation = this.scene.tweens.addCounter({
       from: stop,
       to: start,
-      duration: length * 6,
+      duration: length * 5.5,
       hold: 100,
       repeatDelay: 100,
       yoyo: true,

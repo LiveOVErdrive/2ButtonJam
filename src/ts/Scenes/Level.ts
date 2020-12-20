@@ -49,6 +49,7 @@ export default class Level extends Phaser.Scene {
     this.anims.createFromAseprite('climber');
     this.anims.createFromAseprite('iceblock');
     this.anims.createFromAseprite('snowflake');
+    this.anims.createFromAseprite('backdrops');
     this.cameras.main.zoom = 1;
   }
 
@@ -57,7 +58,9 @@ export default class Level extends Phaser.Scene {
     this.startTime = undefined;
     this.doneTime = undefined;
     this.state = "live";
+
     const map = this.loadMap(levelConfig);
+
 
     const camera = this.cameras.main;
     camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -66,9 +69,43 @@ export default class Level extends Phaser.Scene {
     this.climber = new Climber(this.matter.world, x!, y!);
     this.climber.setFacing("right");
     camera.startFollow(this.climber, true);
-    camera.deadzone = new Phaser.Geom.Rectangle(160, 120, 160, 120);
+    camera.deadzone = new Phaser.Geom.Rectangle(280, 210, 80, 60);
     camera.transparent = false;
     camera.setBackgroundColor(0x92d3ff);
+
+    const progress = (this.config.levelNumber - 1) / Levels;
+    const mountainOffset = (progress) * 300;
+    // Setup backdrop
+    this.add.tileSprite(0, mountainOffset, map.widthInPixels * 2, 0, "backdrops", 0)
+      .setOrigin(0, 0)
+      .setTilePosition(1000, 0)
+      .setScrollFactor(0.9, 0)
+      .setTint(0x888888)
+      .setDepth(-1);
+    this.add.tileSprite(0, mountainOffset - 200 * (1 - progress), map.widthInPixels * 2, 0, "backdrops", 1)
+      .setOrigin(0, 0)
+      .setScrollFactor(0.9, 0)
+      .setTint(0x72a3af)
+      .setDepth(-2);
+    this.add.tileSprite(0, mountainOffset - 400 * (1 - progress), map.widthInPixels * 2, 0, "backdrops", 2)
+      .setOrigin(0, 0)
+      .setScrollFactor(0.9, 0)
+      .setTint(0x82c3ef)
+      .setDepth(-4);
+
+    // Clouds need to be tile-able
+    // const clouds = this.add.tileSprite(0, 0, 1280, 0, "backdrops", 3)
+    //   .setOrigin(0, 0)
+    //   .setScrollFactor(0, 0)
+    //   .setTint(0xffffff)
+    //   .setDepth(-3);
+
+    // this.tweens.add({
+    //   targets: clouds,
+    //   tilePositionX: { from: 0, to: 1280 },
+    //   repeat: -1,
+    //   duration: 100000
+    // })
 
     // Setup finish sensor
     this.setupFinish(map.findObject("objects", obj => obj.name === "finish"));

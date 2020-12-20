@@ -24,6 +24,7 @@ export default class Preloader extends Phaser.Scene {
     this.load.aseprite('endflag', 'sprites/world/endflag.png', 'sprites/world/endflag.json');
     this.load.aseprite('iceblock', 'sprites/world/iceblock.png', 'sprites/world/iceblock.json');
     this.load.aseprite('snowflake', 'sprites/items/snowflake.png', 'sprites/items/snowflake.json');
+    this.load.aseprite('backdrops', 'sprites/world/backdrop.png', 'sprites/world/backdrop.json');
 
     this.load.image("titleBackground", "sprites/screens/titleFull.png");
     this.load.image("gameOverBackground", "sprites/screens/gameOver.png");

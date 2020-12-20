@@ -82,6 +82,11 @@
    <property name="grabbable" type="bool" value="true"/>
    <property name="ground" type="bool" value="false"/>
   </properties>
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="0">
+    <polygon points="0,0 16,0 16,16 1.9375,14.0313"/>
+   </object>
+  </objectgroup>
  </tile>
  <tile id="10">
   <properties>
@@ -90,7 +95,9 @@
    <property name="ground" type="bool" value="false"/>
   </properties>
   <objectgroup draworder="index" id="2">
-   <object id="1" x="0" y="0" width="16" height="16"/>
+   <object id="4" x="0" y="0">
+    <polygon points="0,0 16,0 14.0085,14.0455 0,16"/>
+   </object>
   </objectgroup>
  </tile>
  <tile id="11">
@@ -100,8 +107,8 @@
    <property name="ground" type="bool" value="true"/>
   </properties>
   <objectgroup draworder="index" id="2">
-   <object id="1" x="0" y="0">
-    <polygon points="0,0 16,0 16,16"/>
+   <object id="1" x="16" y="0">
+    <polygon points="0,0 0,16 -16,16 -14.0398,1.92898"/>
    </object>
   </objectgroup>
  </tile>
@@ -113,7 +120,7 @@
   </properties>
   <objectgroup draworder="index" id="2">
    <object id="1" x="0" y="0">
-    <polygon points="0,0 16,0 0,16"/>
+    <polygon points="0,0 0,16 16,16 14.1023,1.96023"/>
    </object>
   </objectgroup>
  </tile>

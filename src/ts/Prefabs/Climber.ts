@@ -156,7 +156,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
   private tryFinishJump(update: boolean = true) {
     if (this.isTouching.top) {
       this.enterStateHanging(update);
-    } else if ((this.isTouching.left || this.isTouching.right) && !this.isTouching.ground) {
+    } else if ((this.isTouching.left || this.isTouching.right)) {
       this.enterStateClinging(update);
     } else if (this.isTouching.ground) {
       this.enterStateStanding();
@@ -215,11 +215,9 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
           intersection
         ) {
           this.play("Idle")
-          this.enterStateClinging(true);
+          this.enterStateClinging(false);
           return;
         }
-        const direction = this.facing === "left" ? -1 : 1;
-        this.applyForce(new Phaser.Math.Vector2(direction * 0.0, -0.03));
         playSound(this.scene, "land");
 
         this.scene.time.delayedCall(

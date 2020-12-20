@@ -417,6 +417,46 @@
                 }, 
                 {
                  "id":9,
+                 "objectgroup":
+                    {
+                     "draworder":"index",
+                     "id":2,
+                     "name":"",
+                     "objects":[
+                            {
+                             "height":0,
+                             "id":1,
+                             "name":"",
+                             "polygon":[
+                                    {
+                                     "x":0,
+                                     "y":0
+                                    }, 
+                                    {
+                                     "x":16,
+                                     "y":0
+                                    }, 
+                                    {
+                                     "x":16,
+                                     "y":16
+                                    }, 
+                                    {
+                                     "x":1.9375,
+                                     "y":14.03125
+                                    }],
+                             "rotation":0,
+                             "type":"",
+                             "visible":true,
+                             "width":0,
+                             "x":0,
+                             "y":0
+                            }],
+                     "opacity":1,
+                     "type":"objectgroup",
+                     "visible":true,
+                     "x":0,
+                     "y":0
+                    },
                  "properties":[
                         {
                          "name":"collides",
@@ -443,13 +483,30 @@
                      "name":"",
                      "objects":[
                             {
-                             "height":16,
-                             "id":1,
+                             "height":0,
+                             "id":4,
                              "name":"",
+                             "polygon":[
+                                    {
+                                     "x":0,
+                                     "y":0
+                                    }, 
+                                    {
+                                     "x":16,
+                                     "y":0
+                                    }, 
+                                    {
+                                     "x":14.00855,
+                                     "y":14.0455
+                                    }, 
+                                    {
+                                     "x":0,
+                                     "y":16
+                                    }],
                              "rotation":0,
                              "type":"",
                              "visible":true,
-                             "width":16,
+                             "width":0,
                              "x":0,
                              "y":0
                             }],
@@ -494,18 +551,22 @@
                                      "y":0
                                     }, 
                                     {
-                                     "x":16,
-                                     "y":0
+                                     "x":0,
+                                     "y":16
                                     }, 
                                     {
-                                     "x":16,
+                                     "x":-16,
                                      "y":16
+                                    }, 
+                                    {
+                                     "x":-14.0398,
+                                     "y":1.92898
                                     }],
                              "rotation":0,
                              "type":"",
                              "visible":true,
                              "width":0,
-                             "x":0,
+                             "x":16,
                              "y":0
                             }],
                      "opacity":1,
@@ -549,12 +610,16 @@
                                      "y":0
                                     }, 
                                     {
-                                     "x":16,
-                                     "y":0
-                                    }, 
-                                    {
                                      "x":0,
                                      "y":16
+                                    }, 
+                                    {
+                                     "x":16,
+                                     "y":16
+                                    }, 
+                                    {
+                                     "x":14.1023,
+                                     "y":1.96023
                                     }],
                              "rotation":0,
                              "type":"",

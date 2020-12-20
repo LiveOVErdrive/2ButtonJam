@@ -5,8 +5,8 @@
 import { CollisionEvent, CollisionCategories, matterCollision } from "../Collisions";
 import { playSound } from "../Scenes/BackgroundAudio";
 
-const msBeforeFlash = 1000;
-const msBeforeCrumble = 2000;
+const msBeforeFlash = 500;
+const msBeforeCrumble = 1500;
 const msBeforeFall = msBeforeCrumble + 200;
 
 export default class IceBlock extends Phaser.Physics.Matter.Sprite {

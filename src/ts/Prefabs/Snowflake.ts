@@ -3,6 +3,7 @@
 */
 
 import { CollisionEvent, CollisionCategories, matterCollision } from "../Collisions";
+import BackgroundAudio, { playSound } from "../Scenes/BackgroundAudio";
 
 export const SnowflakeCount = 'snowflakes';
 export default class Snowflake extends Phaser.Physics.Matter.Sprite {
@@ -42,6 +43,7 @@ export default class Snowflake extends Phaser.Physics.Matter.Sprite {
     this.setToSleep();
     this.play({ key: "Pickup", hideOnComplete: true });
     this.scene.data.inc(SnowflakeCount)
+    playSound(this.scene, "pickup");
   }
 
 }

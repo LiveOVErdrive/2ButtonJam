@@ -4,6 +4,11 @@
 
 import Utilities from "../Utilities";
 
+type Sound = "die" | "jump" | "land" | "levelwin" | "pickup";
+
+export function playSound(scene: Phaser.Scene, sound: Sound) {
+  scene.scene.get(BackgroundAudio.Name).data.set(sound, true);
+}
 
 export default class BackgroundAudio extends Phaser.Scene {
   /**
@@ -35,10 +40,26 @@ export default class BackgroundAudio extends Phaser.Scene {
       return;
     }
 
-    if (this.backgroundAudio.isPlaying && !this.data.get(BackgroundAudio.AudioEnabled)) {
+    const audioOn = this.data.get(BackgroundAudio.AudioEnabled);
+    if (this.backgroundAudio.isPlaying && !audioOn) {
       this.backgroundAudio.stop();
-    } else if (!this.backgroundAudio.isPlaying && this.data.get(BackgroundAudio.AudioEnabled)) {
+    } else if (!this.backgroundAudio.isPlaying && audioOn) {
       this.backgroundAudio.play();
+    }
+
+    if (audioOn) {
+      this.tryPlay("die");
+      this.tryPlay("jump");
+      this.tryPlay("land");
+      this.tryPlay("levelwin");
+      this.tryPlay("pickup");
+    }
+  }
+
+  private tryPlay(sound: string) {
+    if (this.data.get(sound)) {
+      this.sound.play(sound);
+      this.data.toggle(sound);
     }
   }
 }

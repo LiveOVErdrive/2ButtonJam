@@ -48,7 +48,7 @@ module.exports = {
           from: './src/assets',
           to: 'assets',
           globOptions: {
-            ignore: ['**.md', '**.aseprite', '**.tmx', '**.wav', '**.bmglyph']
+            ignore: ['**.md', '**.aseprite', '**.tmx', '**.bmglyph']
           }
         }
       ]

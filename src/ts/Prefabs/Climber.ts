@@ -4,6 +4,7 @@
 
 import { BodyType } from "matter";
 import { CollisionEvent, CollisionCategories, matterCollision } from "../Collisions";
+import { playSound } from "../Scenes/BackgroundAudio";
 
 type Facing = "left" | "right" | "down" | "up";
 type State = "clinging" | "hanging" | "standing" | "prepping" | "jumping" | "climbing" | "dead";
@@ -160,6 +161,10 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     } else if (this.isTouching.ground) {
       this.enterStateStanding();
     }
+
+    if (this.state !== "jumping") {
+      playSound(this.scene, "land");
+    }
   }
 
   private enterStateClinging(updateConstraint: boolean) {
@@ -215,6 +220,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
         }
         const direction = this.facing === "left" ? -1 : 1;
         this.applyForce(new Phaser.Math.Vector2(direction * 0.0, -0.03));
+        playSound(this.scene, "land");
 
         this.scene.time.delayedCall(
           150,
@@ -295,6 +301,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
     this.state = "jumping";
     this.play('Jump');
     this.replaceHangingConstraint();
+    playSound(this.scene, "jump");
 
     if (!this.aimingDisplay) {
       throw new Error("aimingDisplay should not be null when jumping");
@@ -326,6 +333,7 @@ export default class Climber extends Phaser.Physics.Matter.Sprite {
   }
 
   enterStateDead() {
+    playSound(this.scene, "die");
     this.state = "dead";
     this.play('DEATH');
     this.replaceHangingConstraint();

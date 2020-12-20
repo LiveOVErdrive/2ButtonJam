@@ -24,6 +24,7 @@ export default class Preloader extends Phaser.Scene {
     this.load.aseprite('endflag', 'sprites/world/endflag.png', 'sprites/world/endflag.json');
     this.load.aseprite('iceblock', 'sprites/world/iceblock.png', 'sprites/world/iceblock.json');
     this.load.aseprite('snowflake', 'sprites/items/snowflake.png', 'sprites/items/snowflake.json');
+    this.load.spritesheet('backdrops', 'sprites/world/backdrop.png', { margin: 2, spacing: 2, frameWidth: 1280, frameHeight: 640 });
 
     this.load.image("titleBackground", "sprites/screens/titleFull.png");
     this.load.image("gameOverBackground", "sprites/screens/gameOver.png");
@@ -41,6 +42,11 @@ export default class Preloader extends Phaser.Scene {
     this.load.bitmapFont("Label", "fonts/kenney_pixel_32.png", "fonts/kenney_pixel_32.xml");
 
     this.load.audio("background", "sound/2buttonOST.mp3");
+    this.load.audio("die", "sound/sfx/die.wav");
+    this.load.audio("jump", "sound/sfx/jump.wav");
+    this.load.audio("land", "sound/sfx/land.wav");
+    this.load.audio("levelwin", "sound/sfx/levelwin.wav");
+    this.load.audio("pickup", "sound/sfx/pickup.wav");
   }
 
   public create(): void {

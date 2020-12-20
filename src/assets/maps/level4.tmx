@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="48">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="48">
  <editorsettings>
-  <export format="json"/>
+  <export target="level4.json" format="json"/>
  </editorsettings>
  <tileset firstgid="1" name="cliffs" tilewidth="16" tileheight="16" spacing="3" margin="2" tilecount="20" columns="5">
   <image source="../sprites/world/cliff.png" width="96" height="77"/>
@@ -245,67 +245,28 @@
   </data>
  </layer>
  <objectgroup id="3" name="objects">
-  <object id="1" name="start" x="384.801" y="654.086">
+  <object id="1" name="start" x="384" y="640">
    <point/>
   </object>
-  <object id="13" name="finish" x="625.705" y="287.708">
+  <object id="13" name="finish" x="624" y="272">
    <point/>
   </object>
   <object id="25" name="snowflake" x="383.516" y="593.14">
    <point/>
   </object>
-  <object id="26" name="snowflake" x="383.051" y="558.996">
-   <point/>
-  </object>
   <object id="27" name="snowflake" x="383.718" y="526.241">
    <point/>
   </object>
-  <object id="28" name="snowflake" x="383.01" y="495.473">
+  <object id="29" name="snowflake" x="368" y="368">
    <point/>
   </object>
-  <object id="29" name="snowflake" x="383.364" y="432.169">
+  <object id="31" name="snowflake" x="544" y="416">
    <point/>
   </object>
-  <object id="31" name="snowflake" x="447.73" y="399.986">
+  <object id="33" name="snowflake" x="544" y="272">
    <point/>
   </object>
-  <object id="33" name="snowflake" x="511.741" y="351.181">
-   <point/>
-  </object>
-  <object id="36" name="snowflake" x="520.936" y="544.278">
-   <point/>
-  </object>
-  <object id="37" name="snowflake" x="559.839" y="610.058">
-   <point/>
-  </object>
-  <object id="38" name="snowflake" x="559.839" y="673.009">
-   <point/>
-  </object>
-  <object id="39" name="snowflake" x="543.571" y="240.84">
-   <point/>
-  </object>
-  <object id="40" name="snowflake" x="544.278" y="273.377">
-   <point/>
-  </object>
-  <object id="41" name="snowflake" x="495.473" y="273.73">
-   <point/>
-  </object>
-  <object id="42" name="snowflake" x="496.181" y="239.072">
-   <point/>
-  </object>
-  <object id="43" name="snowflake" x="600.863" y="102.207">
-   <point/>
-  </object>
-  <object id="44" name="snowflake" x="632.338" y="102.56">
-   <point/>
-  </object>
-  <object id="45" name="snowflake" x="681.497" y="84.8776">
-   <point/>
-  </object>
-  <object id="46" name="snowflake" x="709.082" y="86.2923">
-   <point/>
-  </object>
-  <object id="47" name="snowflake" x="775.923" y="54.1095">
+  <object id="41" name="snowflake" x="496" y="256">
    <point/>
   </object>
  </objectgroup>

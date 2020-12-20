@@ -3,11 +3,10 @@
 */
 
 import { CollisionEvent, CollisionCategories, matterCollision } from "../Collisions";
-import { playSound } from "../Scenes/BackgroundAudio";
 
 const msBeforeFlash = 500;
-const msBeforeCrumble = 1500;
-const msBeforeFall = msBeforeCrumble + 200;
+const msBeforeCrumble = 2000;
+const msBeforeFall = msBeforeCrumble + 100;
 
 export default class IceBlock extends Phaser.Physics.Matter.Sprite {
   private lastTouch: number | undefined = undefined;
@@ -15,11 +14,11 @@ export default class IceBlock extends Phaser.Physics.Matter.Sprite {
 
   constructor(world: Phaser.Physics.Matter.World, x: number, y: number) {
     super(world, x, y, 'iceblock', 0, {
-      chamfer: { radius: 4 },
+      chamfer: { radius: 1 },
       isStatic: true,
       friction: 0,
       collisionFilter: {
-        category: CollisionCategories.Solid | CollisionCategories.Grabbable,
+        category: CollisionCategories.Solid | CollisionCategories.Grabbable | CollisionCategories.Ground,
         group: 0,
         mask: CollisionCategories.Player
       }
